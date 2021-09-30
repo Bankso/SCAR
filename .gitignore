@@ -8,3 +8,7 @@ bigwigs/
 peaks/
 *.Rproj
 tests/
+*.Rhistory
+*.RData
+*.Rbuildignore
+tests/
