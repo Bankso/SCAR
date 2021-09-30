@@ -1,0 +1,10 @@
+*.sif
+aligned/
+genome/
+counts/
+sequences/
+fastqc_reports/
+bigwigs/
+peaks/
+*.Rproj
+tests/
