@@ -36,7 +36,7 @@ export PATH=/opt/conda/envs/SCAR/bin/:$PATH
 apt-get -y update
 apt-get -y install build-essential zlib1g-dev
 
-R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('obanks/SCAR',ref='master')"
+R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('Bankso/SCAR',ref='main')"
 
 ## install updated versions of enaDataGet and SEACR.
 
