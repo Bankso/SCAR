@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=Gal4_30s     		### Job Name
-#SBATCH --output=G30s.out         ### File in which to store job output
-#SBATCH --error=G30s.err          ### File in which to store job error messages
+#SBATCH --job-name=Med14_30s     		### Job Name
+#SBATCH --output=M30s.out         ### File in which to store job output
+#SBATCH --error=M30s.err          ### File in which to store job error messages
 #SBATCH --time=0-01:00:00       	### Wall clock time limit in Days-HH:MM:SS
 #SBATCH --nodes=1               	### Number of nodes needed for the job
 #SBATCH --ntasks-per-node=1     	### Number of tasks to be launched per Node
@@ -14,7 +14,7 @@
 #Can be run as sbatch or in chunks to do only what you need
 #Before running, edit file path at line 17 to be your data directory and copy edited file to new directory
 
-cd /projects/mcknightlab/obanks/analysis/SpLiT_ChEC/Gal4/30s
+cd /projects/mcknightlab/obanks/analysis/SpLiT_ChEC/Med14/30s/SCAR_test/
 
 mkdir -p genome && cd genome
 
@@ -26,16 +26,20 @@ wget ftp://ftp.ensembl.org/pub/release-100/gtf/saccharomyces_cerevisiae/Saccharo
 
 gunzip Saccharomyces_cerevisiae.R64-1-1.100.gtf.gz
 
-###cd ../../../../common
-
-cd ../
+cd /projects/mcknightlab/obanks/analysis/common/
 
 module load singularity
 
-###singularity pull library://zentlab/default/zent_tools:software_v0.4
+if [ ! -e ./scar_v* ]; then
+	singularity pull library://banksorion/default/scar_v0.1:sha256.12d36f4f6c72aeb2bc7ffe1c17079ac64eaeea4e5d5e117bc0e1b115bc51da4e
 
+else
+	break
 
+fi
 
-singularity exec -eCB `pwd` -H `pwd` /projects/mcknightlab/obanks/analysis/common/zent_tools_v0.6.1.sif Rscript chec_process.r
+cd /projects/mcknightlab/obanks/analysis/SpLiT_ChEC/Med14/30s/SCAR_test/
+
+singularity exec -eCB `pwd` -H `pwd` /projects/mcknightlab/obanks/analysis/common/scar_v* Rscript chec_process.r
 
 exit
