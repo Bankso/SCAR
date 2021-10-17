@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 # SpLiT-ChEC Analysis with R (SCAR)
 
 ### Why does this exist?
