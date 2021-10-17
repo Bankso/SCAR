@@ -26,7 +26,7 @@
 make_bigwigs <- function(
   SCAR_obj,
   outdir = getwd(),
-  compare = FALSE,
+  compare = NA,
   bin_size = 10,
   normalize_using = NA,
   genome_size = NA,
@@ -80,7 +80,7 @@ make_bigwigs <- function(
 
   ## Prepare command.
   commands <- imap(samples, function(x, y) {
-    if (!is(compare)) {
+    if (is.na(compare)) {
 	command <- str_c(
       "bamCoverage",
       "-b", x,
