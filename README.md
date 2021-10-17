@@ -14,13 +14,13 @@ The goal of this project is to optimize analysis of low-background whole-genome 
 
 #### On a HPC (strongly recommended)
 
-It is recommended that you use SCAR on a HPC. Run submission can be carried out via slurm or similar.
+It is recommended that you use SCAR on a HPC. Run submission can be carried out via the job management system in your HPC.
 
-Singularity must be available for this software to function. A singularity image file (SIF) creates an identical environment for each run, allowing you to consistently analyze data in an identical environment.
+Singularity must be available for this software to function. A singularity image file (SIF) allows you to create a new "clone" environment for each run, which improves consistency and reproducibility.
 
 Instructions to install Singularity can be found [here](https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps).  
 
-**Note:** You probably can't install this  (or anything else) on your HPC if you are a non-admin user, so contact your admin if it's not available to you and you want it! For the UO Talapas cluster, the availability of modules can be determined with the command
+**Note:** You probably can't install this (or anything else) on your HPC if you are a non-admin user, so contact your admin if it's not available to you and you want it! For the UO Talapas cluster, the availability of modules can be determined with the command
 ```
 module avail
 
@@ -28,7 +28,7 @@ module avail
 
 ### Processing data with SCAR
 
-To begin, generate a clean directory to work within and include the files detailed below
+To begin, generate a clean directory to work in and include the files listed below.
 
 #### File types required:
 
@@ -44,7 +44,7 @@ Bash script to submit jobs via slurm, acquire genome files, and run Singularity
 **process.R**  
 The "heavy-lifter" script, which contains all the commands to process the data by interacting with the SCAR package
 
-The processing steps are outlined below (to be completed expanded on later...)
+The processing steps are outlined below (to be completed later)
 
 #### Collect yeast genome assembly and annotation
 
