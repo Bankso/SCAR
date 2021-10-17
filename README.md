@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # SpLiT-ChEC Analysis with R (SCAR)
 
 ### Why does this exist?
@@ -21,9 +26,9 @@ Singularity must be available for this software to function. A singularity image
 Instructions to install Singularity can be found [here](https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps).  
 
 **Note:** You probably can't install this (or anything else) on your HPC if you are a non-admin user, so contact your admin if it's not available to you and you want it! For the UO Talapas cluster, the availability of modules can be determined with the command
+
 ```
 module avail
-
 ```
 
 ### Processing data with SCAR

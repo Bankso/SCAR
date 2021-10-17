@@ -7,7 +7,7 @@
 make_bigwigs(
   SCAR_obj,
   outdir = getwd(),
-  compare = FALSE,
+  compare = NA,
   bin_size = 10,
   normalize_using = NA,
   genome_size = NA,

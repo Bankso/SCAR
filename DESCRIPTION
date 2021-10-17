@@ -1,16 +1,19 @@
 Package: SCAR
+Type: Package
 Title: SpLiT-ChEC analysis with R
 Version: 0.1
 Authors@R: 
     person(given = "Orion",
            family = "Banks",
            role = c("aut", "cre"),
-           email = "obanks@uoregon.edu",
-           comment = )
+           email = "obanks@uoregon.edu"
+           )
+Maintainer: Orion Banks <obanks@uoregon.edu>
 Description: Allows analysis of sequencing data by collecting a bunch of scripts and programs in one place. Combined with singularity, this affords a consistent and easy to use processing environment which improves reproducibility.
-License: use_gpl3_license()
+Notes: Based on ZentTools from gzentner and rpolicastro.
+License: GPL (>=2)
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
 Imports:
     methods,
     stringr,
