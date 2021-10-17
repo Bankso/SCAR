@@ -1,6 +1,0 @@
-.cache
-.bash_history
-^.*\.Rproj$
-^\.Rproj\.user$
-.txt
-test_files

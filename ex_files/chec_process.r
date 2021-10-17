@@ -6,31 +6,31 @@
 # Create sample sheet
 samples <- read.delim("samples.txt", sep = "\t")
 
-# Generate ZentTools object
-library("ZentTools")
+# Generate SCAR object
+library("SCAR")
 
-zent <- zent_tools(
-  analysis_type = "ChEC-seq", sample_sheet = samples,
+SCAR <- SCAR_maker(
+  analysis_type = "SChEC-seq", sample_sheet = samples,
   paired = TRUE, ncores = 8
 )
 
 # Perform read QC
-zent <- fastqc(zent, outdir = "./fastqc_reports")
+SCAR <- fastqc(SCAR, outdir = "./fastqc_reports")
 
 # Generate Bowtie2 index and align reads
-zent <- bowtie2_index(
-  zent, outdir = "./genome/index",
+SCAR <- bowtie2_index(
+  SCAR, outdir = "./genome/index",
   genome_assembly = "./genome/Saccharomyces_cerevisiae.R64-1-1.dna_sm.toplevel.fa",
   index_name = "sacCer3_index"
 )
 
-zent <- bowtie2_align(zent, outdir = "./aligned", min_fragment = 3, max_fragment = 100)
+SCAR <- bowtie2_align(SCAR, outdir = "./aligned", min_fragment = 20, max_fragment = 200)
 
 # Make tracks
-zent <- make_bigwigs(
-  zent, outdir = "./bigwigs", bin_size = 1,
+SCAR <- make_bigwigs(
+  SCAR, outdir = "./bigwigs", bin_size = 1,
   normalize_using = "CPM", extend_reads = TRUE
 )
 
 # Call peaks
-zent <- call_peaks(zent, outdir = './peaks', genome_size = 12100000)
+SCAR <- call_peaks(SCAR, outdir = './peaks', genome_size = 12100000)
