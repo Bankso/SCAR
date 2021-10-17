@@ -5,8 +5,9 @@
 \title{Generate Bigwigs}
 \usage{
 make_bigwigs(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
+  compare = FALSE,
   bin_size = 10,
   normalize_using = NA,
   genome_size = NA,
@@ -21,9 +22,11 @@ make_bigwigs(
 )
 }
 \arguments{
-\item{zent_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{outdir}{Output directory.}
+
+\item{compare}{set to true if wanting to use bamCompare (coming soon).}
 
 \item{bin_size}{Bin size for coverage summary.}
 

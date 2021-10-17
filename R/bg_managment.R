@@ -1,22 +1,22 @@
 #' Add Bedgraphs to Sample Sheet
 #' @import stringr
 #' 
-#' @param zent_obj ZentTools object.
+#' @param SCAR_obj ZentTools object.
 #' @param alignment_dir Directory for files to be dumped to.
 #'
 #' @export
 
 add_bgs <- function(
-  zent_obj,
+  SCAR_obj,
   alignment_dir
 ) {
 
   ## Grab some info from object and prepare inputs.
-  analysis_type <- pull_setting(zent_obj, "analysis_type")
+  analysis_type <- pull_setting(SCAR_obj, "analysis_type")
   if (!str_detect(alignment_dir, "/$")) {
     alignment_dir <- str_c(alignment_dir, "/")
   }
-  sample_sheet <- copy(zent_obj@sample_sheet)
+  sample_sheet <- copy(SCAR_obj@sample_sheet)
 
   ## Add if RNA-seq experiment.
   if (analysis_type == "RNA-seq") {
@@ -33,9 +33,9 @@ add_bgs <- function(
   }
 
   ## Add new sample sheet back to zent object.
-  zent_obj@sample_sheet <- sample_sheet
+  SCAR_obj@sample_sheet <- sample_sheet
 
   ## Return the zent object.
-  return(zent_obj)
+  return(SCAR_obj)
 }
 

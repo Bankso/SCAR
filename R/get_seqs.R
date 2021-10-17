@@ -4,14 +4,14 @@
 #' @importFrom Rsamtools FaFile getSeq
 #' @importFrom rtracklayer import
 #'
-#' @param zent_obj ZentTools object.
+#' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for fasta file.
 #' @param fixed_width Make the peaks a fixed width from the center of the peak.
 #'
 #' @export
 
 get_seqs <- function(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   fixed_width = NA
 ) {
@@ -21,11 +21,11 @@ get_seqs <- function(
 
   ## Import the peak files.
   peak_files <- str_c(
-    pull_setting(zent_obj, "peak_dir"),
-    zent_obj@sample_sheet[["sample_name"]],
+    pull_setting(SCAR_obj, "peak_dir"),
+    SCAR_obj@sample_sheet[["sample_name"]],
     "_peaks.narrowPeak"
   )
-  names(peak_files) <- zent_obj@sample_sheet[["sample_name"]]
+  names(peak_files) <- SCAR_obj@sample_sheet[["sample_name"]]
 
   narrowpeak_cols  <-  c(
     signal.value = "numeric",
@@ -46,7 +46,7 @@ get_seqs <- function(
   }
 
   ## Create reference to the genome assembly.
-  assembly <- pull_setting(zent_obj, "genome_assembly")
+  assembly <- pull_setting(SCAR_obj, "genome_assembly")
   assembly <- FaFile(assembly)
 
 }

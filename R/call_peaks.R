@@ -3,7 +3,7 @@
 #'
 #' @importFrom purrr pmap
 #'
-#' @param zent_obj ZentTools object.
+#' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for peak files.
 #' @param genome_size Effective genome size.
 #' @param qvalue_cutoff q-value cutoff for peak calling.
@@ -14,7 +14,7 @@
 #' @export
 
 call_peaks <- function(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   genome_size,
   qvalue_cutoff = 0.05,
@@ -24,13 +24,13 @@ call_peaks <- function(
 
   ## Input checks.
   if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
-  paired_status <- as.logical(pull_setting(zent_obj, "paired"))
+  paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
 
   ## Make sure the output directory exists.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   ## Create the peak calling command.
-  commands <- pmap(zent_obj@sample_sheet, function(...) {
+  commands <- pmap(SCAR_obj@sample_sheet, function(...) {
     args <- list(...)
 
     command <- str_c(
@@ -73,10 +73,10 @@ call_peaks <- function(
   walk(commands, system, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   ## Save the peak directory.
-  zent_obj <- set_settings(zent_obj, peak_dir = outdir)
+  SCAR_obj <- set_settings(SCAR_obj, peak_dir = outdir)
 
   ## Return the zent object.
-  return(zent_obj)
+  return(SCAR_obj)
 }
 
 #' Annotate Peaks
@@ -86,7 +86,7 @@ call_peaks <- function(
 #' @importFrom GenomicFeatures makeTxDbFromGFF
 #' @importFrom purrr iwalk
 #'
-#' @param zent_obj ZentTools object.
+#' @param SCAR_obj SCAR object.
 #' @param outdir Directory to output the annotated peaks.
 #' @param genome_annotation Genome GTF annotation file.
 #' @param promoter_downstream Bases downstream of TSS to define promoter.
@@ -96,7 +96,7 @@ call_peaks <- function(
 #' @export
 
 annotate_peaks <- function(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   genome_annotation,
   promoter_downstream = 1000,
@@ -115,11 +115,11 @@ annotate_peaks <- function(
 
   ## Import the peak files.
   peak_files <- str_c(
-    pull_setting(zent_obj, "peak_dir"),
-    zent_obj@sample_sheet[["sample_name"]],
+    pull_setting(SCAR_obj, "peak_dir"),
+    SCAR_obj@sample_sheet[["sample_name"]],
     "_peaks.narrowPeak"
   )
-  names(peak_files) <- zent_obj@sample_sheet[["sample_name"]]
+  names(peak_files) <- SCAR_obj@sample_sheet[["sample_name"]]
 
   narrowpeak_cols  <-  c(
     signal.value = "numeric",
@@ -146,7 +146,7 @@ annotate_peaks <- function(
     )
   })
 
-  ## Return the zent object.
-  return(zent_obj)
+  ## Return the SCAR object.
+  return(SCAR_obj)
 
 }

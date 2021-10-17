@@ -4,12 +4,12 @@
 \alias{retrieve_reads}
 \title{Retrieve Reads from SRA}
 \usage{
-retrieve_reads(zent_obj, outdir = getwd())
+retrieve_reads(SCAR_obj, outdir = getwd())
 }
 \arguments{
-\item{zent_obj}{Zent object.}
+\item{SCAR_obj}{SCAR object, holds data for use in all the functions..}
 
-\item{outdir}{Directory to donwload files to.}
+\item{outdir}{Directory to download files to.}
 }
 \description{
 Retrieve Reads from SRA

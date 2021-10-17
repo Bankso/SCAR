@@ -5,7 +5,7 @@
 \title{Peak Calling}
 \usage{
 call_peaks(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   genome_size,
   qvalue_cutoff = 0.05,
@@ -14,7 +14,7 @@ call_peaks(
 )
 }
 \arguments{
-\item{zent_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{outdir}{Output directory for peak files.}
 

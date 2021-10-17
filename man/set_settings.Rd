@@ -5,7 +5,7 @@
 \title{Set Settings.}
 \usage{
 set_settings(
-  zent_obj,
+  SCAR_obj,
   analysis_type = NA,
   paired = NA,
   ncores = NA,
@@ -17,10 +17,10 @@ set_settings(
 )
 }
 \arguments{
-\item{zent_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object, holds data for use in all the functions.}
 
 \item{analysis_type}{Type of experiment.
-Either 'RNA-seq', 'ChIP-seq', or 'ChEC-seq'.}
+'ChIP-seq', 'ChEC-seq', or 'SChEC-seq'.}
 
 \item{paired}{Paired-end status of the reads.
 Either TRUE or FALSE.}

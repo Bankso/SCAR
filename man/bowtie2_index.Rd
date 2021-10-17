@@ -5,14 +5,14 @@
 \title{Bowtie2 Index Generation}
 \usage{
 bowtie2_index(
-  zent_obj,
+  SCAR_obj,
   genome_assembly,
   outdir = getwd(),
   index_name = "bowtie2_index"
 )
 }
 \arguments{
-\item{zent_obj}{Zent object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{genome_assembly}{Path to genome fasta file.}
 

@@ -3,7 +3,7 @@
 #'
 #' @importFrom purrr pmap
 #'
-#' @param zent_obj ZentTools object.
+#' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for peak files.
 #' @param num_thresh P-value thresholding for peaks.
 #' @param norm TRUE or FALSE - normalization on/off
@@ -14,7 +14,7 @@
 
 call_peaks_SEACR <- function
 	(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   num_thresh = 0.05,
   norm = TRUE,
@@ -25,13 +25,13 @@ call_peaks_SEACR <- function
 
   ## Input checks.
   if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
-  paired_status <- as.logical(pull_setting(zent_obj, "paired"))
+  paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
 
   ## Make sure the output directory exists.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   ## Create the peak calling command.
-  commands <- pmap(zent_obj@sample_sheet, function(...) {
+  commands <- pmap(SCAR_obj@sample_sheet, function(...) {
     args <- list(...)
 
     command <- str_c(
@@ -70,8 +70,8 @@ call_peaks_SEACR <- function
   walk(commands, system, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   ## Save the peak directory.
-  zent_obj <- set_settings(zent_obj, peak_dir = outdir)
+  SCAR_obj <- set_settings(SCAR_obj, peak_dir = outdir)
 
   ## Return the zent object.
-  return(zent_obj)
+  return(SCAR_obj)
 }

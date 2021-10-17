@@ -1,7 +1,7 @@
 
 #' Bowtie2 Index Generation
 #'
-#' @param zent_obj Zent object.
+#' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for STAR genome index.
 #' @param genome_assembly Path to genome fasta file.
 #' @param index_name The naming structure given to the index.
@@ -9,7 +9,7 @@
 #' @export
 
 bowtie2_index <- function(
-  zent_obj,
+  SCAR_obj,
   genome_assembly,
   outdir = getwd(),
   index_name = "bowtie2_index"
@@ -25,7 +25,7 @@ bowtie2_index <- function(
   command <- str_c(
     "bowtie2-build",
     "-f", genome_assembly,
-    "--threads", pull_setting(zent_obj, "ncores"),
+    "--threads", pull_setting(SCAR_obj, "ncores"),
     str_c(outdir, index_name),
     sep = " "
   )
@@ -35,14 +35,14 @@ bowtie2_index <- function(
   system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   ## Store the genome directory.
-  zent_obj <- set_settings(
-    zent_obj,
+  SCAR_obj <- set_settings(
+    SCAR_obj,
     genome_dir = str_c(outdir, index_name),
     genome_assembly = genome_assembly
   )
 
-  ## Return the zent object.
-  return(zent_obj)
+  ## Return the SCAR object.
+  return(SCAR_obj)
 
 }
 
@@ -50,7 +50,7 @@ bowtie2_index <- function(
 #'
 #' @importFrom purrr walk imap
 #'
-#' @param zent_obj Zent object.
+#' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for aligned reads.
 #' @param alignment_mode Either 'end-to-end' or 'local'.
 #' @param min_fragment Minimum fragment length (paired end).
@@ -60,7 +60,7 @@ bowtie2_index <- function(
 #' @export
 
 bowtie2_align <- function(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   alignment_mode = "end-to-end",
   min_fragment = NA,
@@ -70,22 +70,22 @@ bowtie2_align <- function(
 
   ## Input checks.
   if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
-  paired_status <- as.logical(pull_setting(zent_obj, "paired"))
+  paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
 
   ## Create output directory if it exists.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   if (paired_status) {
     samples <- split(
-      zent_obj@sample_sheet[, .(sample_name, file_1, file_2)],
+      SCAR_obj@sample_sheet[, .(sample_name, file_1, file_2)],
       by = "sample_name",
       keep.by = FALSE
     )
     samples <- map(samples, as.character)
 
-    if (any(!is.na(zent_obj@sample_sheet[["control_file_1"]]))) {
+    if (any(!is.na(SCAR_obj@sample_sheet[["control_file_1"]]))) {
       controls <- split(
-        unique(zent_obj@sample_sheet[
+        unique(SCAR_obj@sample_sheet[
           !is.na(control_file_1),
           .(control_name, control_file_1, control_file_2)
         ]),
@@ -97,15 +97,15 @@ bowtie2_align <- function(
     }
   } else {
     samples <- split(
-      zent_obj@sample_sheet[, .(sample_name, file_1)],
+      SCAR_obj@sample_sheet[, .(sample_name, file_1)],
       by = "sample_name",
       keep.by = FALSE
     )
     samples <- map(samples, as.character)
 
-    if (any(!is.na(zent_obj@sample_sheet[["control_file_1"]]))) {
+    if (any(!is.na(SCAR_obj@sample_sheet[["control_file_1"]]))) {
       controls <- split(
-        unique(zent_obj@sample_sheet[
+        unique(SCAR_obj@sample_sheet[
           !is.na(control_file_1),
           .(control_name, control_file_1)
         ]),
@@ -122,11 +122,11 @@ bowtie2_align <- function(
   print_message("Aligning the FASTQ reads to the genome using Bowtie2")
   iwalk(samples, function(x, y) {
     command <- str_c(
-      "-x", pull_setting(zent_obj, "genome_dir"),
+      "-x", pull_setting(SCAR_obj, "genome_dir"),
       "-S", str_c(outdir, y, ".sam"),
       "--phred33",
       "--no-unal",
-      "-p", pull_setting(zent_obj, "ncores"),
+      "-p", pull_setting(SCAR_obj, "ncores"),
       sep = " "
     )
 
@@ -163,7 +163,7 @@ bowtie2_align <- function(
     command <- str_c(
       "samtools", "sort",
       "-m", max_memory,
-      "-@", pull_setting(zent_obj, "ncores"),
+      "-@", pull_setting(SCAR_obj, "ncores"),
       "-o", str_c(outdir, str_c(x, ".bam")),
       "-O", "BAM",
       str_c(outdir, str_c(x, ".sam")),
@@ -179,13 +179,13 @@ bowtie2_align <- function(
     system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
   })
 
-  ## Add settings to zent object.
-  zent_obj <- set_settings(zent_obj, alignment_dir = outdir)
+  ## Add settings to SCAR object.
+  SCAR_obj <- set_settings(SCAR_obj, alignment_dir = outdir)
 
   ## Add bam files to sample_sheet.
-  zent_obj <- add_bams(zent_obj, alignment_dir = outdir)
+  SCAR_obj <- add_bams(SCAR_obj, alignment_dir = outdir)
 
-  ## Return the zent object.
-  return(zent_obj)
+  ## Return the SCAR object.
+  return(SCAR_obj)
 
 }

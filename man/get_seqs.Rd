@@ -4,10 +4,10 @@
 \alias{get_seqs}
 \title{Get Genomic Sequences}
 \usage{
-get_seqs(zent_obj, outdir = getwd(), fixed_width = NA)
+get_seqs(SCAR_obj, outdir = getwd(), fixed_width = NA)
 }
 \arguments{
-\item{zent_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{outdir}{Output directory for fasta file.}
 

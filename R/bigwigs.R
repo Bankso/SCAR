@@ -1,8 +1,9 @@
 
 #' Generate Bigwigs
 #'
-#' @param zent_obj ZentTools object.
+#' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
+#' @param compare set to true if wanting to use bamCompare (coming soon).
 #' @param bin_size Bin size for coverage summary.
 #' @param normalize_using Either 'CPM' or 'RPGC'.
 #' @param genome_size Effective genome size.
@@ -23,8 +24,9 @@
 #' @export
 
 make_bigwigs <- function(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
+  compare = FALSE,
   bin_size = 10,
   normalize_using = NA,
   genome_size = NA,
@@ -40,8 +42,8 @@ make_bigwigs <- function(
 
   ## Input checks.
   if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
-  paired_status <- as.logical(pull_setting(zent_obj, "paired"))
-  analysis_type <- pull_setting(zent_obj, "analysis_type")
+  paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
+  analysis_type <- pull_setting(SCAR_obj, "analysis_type")
 
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
@@ -49,15 +51,15 @@ make_bigwigs <- function(
   ## Get bams.
   if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq")) {
     samples <- split(
-      zent_obj@sample_sheet[, .(sample_name, sample_bams)],
+      SCAR_obj@sample_sheet[, .(sample_name, sample_bams)],
       by = "sample_name",
       keep.by = FALSE
     )
     samples <- map(samples, as.character)
 
-    if(any(!is.na(zent_obj@sample_sheet[["control_bams"]]))) {
+    if(any(!is.na(SCAR_obj@sample_sheet[["control_bams"]]))) {
       controls <- split(
-        unique(zent_obj@sample_sheet[
+        unique(SCAR_obj@sample_sheet[
           !is.na(control_bams),
           .(control_name, control_bams)
         ]),
@@ -69,7 +71,7 @@ make_bigwigs <- function(
     }
   } else {
     samples <- split(
-      zent_obj@sample_sheet[, .(sample_name, bam_files)],
+      SCAR_obj@sample_sheet[, .(sample_name, bam_files)],
       by = "sample_name",
       keep.by = FALSE
     )
@@ -78,15 +80,16 @@ make_bigwigs <- function(
 
   ## Prepare command.
   commands <- imap(samples, function(x, y) {
-    command <- str_c(
+    if (!is(compare)) {
+	command <- str_c(
       "bamCoverage",
       "-b", x,
       "-of", "bigwig",
       "-bs", bin_size,
-      "-p", pull_setting(zent_obj, "ncores"),
+      "-p", pull_setting(SCAR_obj, "ncores"),
       sep = " "
     )
-
+	
     if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
       command <- str_c(command, "--normalizeUsing", normalize_using, sep = " ")
     }
@@ -117,7 +120,7 @@ make_bigwigs <- function(
     }
 
     return(command)
-  })
+  }})
 
   ## Split strands if requested for RNA-seq.
   if (split_strands) {
@@ -157,6 +160,6 @@ make_bigwigs <- function(
   walk(commands, system)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   ## Return zent tools object.
-  return(zent_obj)
+  return(SCAR_obj)
 
 }

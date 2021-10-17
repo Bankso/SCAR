@@ -5,7 +5,7 @@
 \title{Bowtie2 Alignment}
 \usage{
 bowtie2_align(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   alignment_mode = "end-to-end",
   min_fragment = NA,
@@ -14,7 +14,7 @@ bowtie2_align(
 )
 }
 \arguments{
-\item{zent_obj}{Zent object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{outdir}{Output directory for aligned reads.}
 

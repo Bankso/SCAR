@@ -4,7 +4,7 @@
 #' @importFrom Rsubread featureCounts
 #' @importFrom stringr str_replace
 #'
-#' @param zent_obj Zent object.
+#' @param SCAR_obj Zent object.
 #' @param outdir Output directory for counts.
 #' @param count_feature Reads will be counted against this
 #'   genomic feature type, such as the default 'exon' (GTF.featureType).
@@ -28,7 +28,7 @@
 #' @export
 
 count_features <- function(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   count_feature = "exon",
   aggregate_feature = "gene_id",
@@ -45,13 +45,13 @@ count_features <- function(
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   ## Get bam files.
-  bam_files <- zent_obj@sample_sheet[["bam_files"]]  
+  bam_files <- SCAR_obj@sample_sheet[["bam_files"]]  
 
   ## Run Rsubread featureCounts.
   print_message("Feature counting from aligned reads.")
   counts <- featureCounts(
     files = bam_files,
-    annot.ext = zent_obj@settings[parameter == "genome_annotation", value],
+    annot.ext = SCAR_obj@settings[parameter == "genome_annotation", value],
     isGTFAnnotationFile = TRUE,
     GTF.featureType = count_feature,
     GTF.attrType = aggregate_feature,
@@ -62,8 +62,8 @@ count_features <- function(
     countMultiMappingReads = multi_mapping,
     fraction = multi_mapping_frac,
     strandSpecific = strand_specific,
-    isPairedEnd = as.logical(zent_obj@settings[parameter == "paired", value]),
-    nthreads = as.numeric(zent_obj@settings[parameter == "ncores", value])
+    isPairedEnd = as.logical(SCAR_obj@settings[parameter == "paired", value]),
+    nthreads = as.numeric(SCAR_obj@settings[parameter == "ncores", value])
   )
 
   ## Prepare the feature counts for export.
@@ -101,7 +101,7 @@ count_features <- function(
     col.names = TRUE, row.names = FALSE, quote = FALSE
   )
 
-  ## Return the zent object.
-  return(zent_obj)
+  ## Return the SCAR object.
+  return(SCAR_obj)
 
 }

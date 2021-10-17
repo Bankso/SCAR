@@ -5,7 +5,7 @@
 \title{Annotate Peaks}
 \usage{
 annotate_peaks(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   genome_annotation,
   promoter_downstream = 1000,
@@ -14,7 +14,7 @@ annotate_peaks(
 )
 }
 \arguments{
-\item{zent_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{outdir}{Directory to output the annotated peaks.}
 

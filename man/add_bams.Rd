@@ -4,10 +4,10 @@
 \alias{add_bams}
 \title{Add BAMs to Sample Sheet}
 \usage{
-add_bams(zent_obj, alignment_dir)
+add_bams(SCAR_obj, alignment_dir)
 }
 \arguments{
-\item{zent_obj}{ZentTools object.}
+\item{SCAR_obj}{ZentTools object.}
 
 \item{alignment_dir}{Directory of aligned reads.}
 }

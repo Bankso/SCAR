@@ -5,7 +5,7 @@
 \title{Count Features}
 \usage{
 count_features(
-  zent_obj,
+  SCAR_obj,
   outdir = getwd(),
   count_feature = "exon",
   aggregate_feature = "gene_id",
@@ -19,7 +19,7 @@ count_features(
 )
 }
 \arguments{
-\item{zent_obj}{Zent object.}
+\item{SCAR_obj}{Zent object.}
 
 \item{outdir}{Output directory for counts.}
 

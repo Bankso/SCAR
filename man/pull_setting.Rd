@@ -4,10 +4,10 @@
 \alias{pull_setting}
 \title{Pull Settings}
 \usage{
-pull_setting(zent_obj, setting)
+pull_setting(SCAR_obj, setting)
 }
 \arguments{
-\item{zent_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object, holds data for use in all the functions.}
 
 \item{setting}{Setting to pull.}
 }

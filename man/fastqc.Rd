@@ -4,10 +4,10 @@
 \alias{fastqc}
 \title{Quality Control of Fastq Files}
 \usage{
-fastqc(zent_obj, outdir = getwd())
+fastqc(SCAR_obj, outdir = getwd())
 }
 \arguments{
-\item{zent_obj}{Zent object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{outdir}{Output directory for reports (-o).}
 }
