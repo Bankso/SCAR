@@ -41,8 +41,7 @@ R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('Bankso/SCAR'
 ## install updated versions of enaDataGet and SEACR.
 
 git clone https://github.com/rpolicastro/enaBrowserTools.git
-git clone https://github.com/FredHutch/SEACR/blob/master/SEACR_1.3.R
-git clone https://github.com/FredHutch/SEACR/blob/master/SEACR_1.3.sh
+git clone https://github.com/FredHutch/SEACR
 
 %environment
 

@@ -6,9 +6,9 @@ Authors@R:
            family = "Banks",
            role = c("aut", "cre"),
            email = "obanks@uoregon.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = )
 Description: Allows analysis of sequencing data by collecting a bunch of scripts and programs in one place. Combined with singularity, this affords a consistent and easy to use processing environment which improves reproducibility.
-License: `use_gpl3_license()`
+License: use_gpl3_license()
 Encoding: UTF-8
 LazyData: true
 Imports:
