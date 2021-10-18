@@ -18,8 +18,7 @@ conda create -n SCAR -y -c conda-forge -c bioconda \
 r-base r-devtools r-tidyverse r-data.table r-ggpubr \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
-fastqc star samtools bowtie2 deeptools bedtools macs2 \
-requests parallel
+fastqc star samtools bowtie2 deeptools bedtools macs2
 
 ## Update environment.
 
