@@ -6,7 +6,7 @@ From: continuumio/miniconda3
 
 ## Allow conda to run.
 
-./opt/conda/etc/profile.d/conda.sh
+. /opt/conda/etc/profile.d/conda.sh
 
 ## Update conda.
 
@@ -18,7 +18,8 @@ conda create -n SCAR -y -c conda-forge -c bioconda \
 r-base r-devtools r-tidyverse r-data.table r-ggpubr \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
-fastqc star samtools bowtie2 deeptools bedtools macs2
+fastqc star samtools bowtie2 deeptools bedtools macs2 \
+requests parallel
 
 ## Update environment.
 
@@ -30,10 +31,10 @@ conda clean -y --all
 
 ## Install SCAR.
 
-export PATH=/opt/conda/envs/SCAR/bin/:$PATH
+export PATH="/opt/conda/envs/SCAR/bin/:$PATH"
 
-sudo apt-get -y update
-sudo apt-get -y install build-essential zlib1g-dev
+apt-get -y update
+apt-get -y install build-essential zlib1g-dev
 
 R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('Bankso/SCAR',ref='main')"
 
@@ -45,3 +46,4 @@ git clone https://github.com/FredHutch/SEACR
 %environment
 
 export PATH=/enaBrowserTools/python3/:/opt/conda/envs/SCAR/bin/:$PATH
+export PATH=/SEACR/python3/:/opt/conda/envs/SCAR/bin/:$PATH
