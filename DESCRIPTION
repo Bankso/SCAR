@@ -19,6 +19,7 @@ Imports:
     stringr,
     data.table,
     purrr,
+	BiocManager,
     Rsubread,
     ChIPseeker,
     GenomicFeatures,

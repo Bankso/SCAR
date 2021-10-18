@@ -14,11 +14,11 @@ conda update -n base -y -c defaults conda
 ## Install required software.
 
 conda create -n SCAR_env -y -c conda-forge -c bioconda \
-r-base r-devtools r-tidyverse r-data.table r-ggpubr \
+r-base r-devtools r-tidyverse r-data.table r-ggpubr r-biocmanager \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
 fastqc star samtools bowtie2 deeptools bedtools macs2 \
-requests
+requests parallel
 
 ## Update environment.
 
@@ -32,10 +32,22 @@ conda clean -y --all
 
 export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
 
+## Get compression tools for linux
+
 apt-get -y update
 apt-get -y install build-essential zlib1g-dev
 
-R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('Bankso/SCAR',ref='main',upgrade='never')"
+## Set some things for R to work
+
+echo "options(repos ='https://cran.rstudio.com/', \
+  unzip = 'internal', \
+  download.file.method ='libcurl', \
+  Ncpus = parallel::detectCores() )" >> /etc/R/Rprofile.site
+
+Rscript --no-save -e "Sys.setenv(TAR='/bin/tar'); \
+BiocManager::install("DO.db"); \
+BiocManager::install("GO.db"); \
+devtools::install_github('Bankso/SCAR',ref='main',upgrade='never')"
 
 ## install updated version of enaDataGet and SEACR.
 
