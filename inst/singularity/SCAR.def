@@ -6,7 +6,7 @@ From: continuumio/miniconda3
 
 ## Allow conda to run.
 
-. /opt/conda/etc/profile.d/conda.sh
+./opt/conda/etc/profile.d/conda.sh
 
 ## Update conda.
 
@@ -33,8 +33,8 @@ conda clean -y --all
 
 export PATH=/opt/conda/envs/SCAR/bin/:$PATH
 
-apt-get -y update
-apt-get -y install build-essential zlib1g-dev
+sudo apt-get -y update
+sudo apt-get -y install build-essential zlib1g-dev
 
 R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('Bankso/SCAR',ref='main')"
 
