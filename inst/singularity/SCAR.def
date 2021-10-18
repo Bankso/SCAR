@@ -1,4 +1,3 @@
-
 bootstrap: docker
 From: continuumio/miniconda3
 
@@ -14,16 +13,16 @@ conda update -n base -y -c defaults conda
 
 ## Install required software.
 
-conda create -n SCAR -y -c conda-forge -c bioconda \
+conda create -n SCAR_env -y -c conda-forge -c bioconda \
 r-base r-devtools r-tidyverse r-data.table r-ggpubr \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
 fastqc star samtools bowtie2 deeptools bedtools macs2 \
-requests parallel
+requests
 
 ## Update environment.
 
-conda update -n SCAR -y -c conda-forge -c bioconda --all
+## conda update -n SCAR_env -y -c conda-forge -c bioconda --all
 
 ## Clean up extra files.
 
@@ -31,19 +30,19 @@ conda clean -y --all
 
 ## Install SCAR.
 
-export PATH="/opt/conda/envs/SCAR/bin/:$PATH"
+export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
 
 apt-get -y update
 apt-get -y install build-essential zlib1g-dev
 
-R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('Bankso/SCAR',ref='main')"
+R --slave -e "Sys.setenv(TAR='/bin/tar'); devtools::install_github('Bankso/SCAR',ref='main',upgrade='never')"
 
-## install updated versions of enaDataGet and SEACR.
+## install updated version of enaDataGet and SEACR.
 
 git clone https://github.com/rpolicastro/enaBrowserTools.git
 git clone https://github.com/FredHutch/SEACR
 
 %environment
 
-export PATH=/enaBrowserTools/python3/:/opt/conda/envs/SCAR/bin/:$PATH
-export PATH=/SEACR/python3/:/opt/conda/envs/SCAR/bin/:$PATH
+export PATH=/enaBrowserTools/python3/:/opt/conda/envs/ZentTools/bin/:$PATH
+export PATH=/SEACR/:/opt/conda/envs/SCAR/bin/:$PATH
