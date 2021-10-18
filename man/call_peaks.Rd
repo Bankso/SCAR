@@ -24,8 +24,7 @@ call_peaks(
 
 \item{broad_peaks}{Whether the peaks are broad or not.}
 
-\item{broad_qvalue_cutoff}{If 'broad_peaks' is set,
-This controls the q-value cutoff of the broad peaks.}
+\item{broad_qvalue_cutoff}{If 'broad_peaks' is set, this controls the q-value cutoff of the broad peaks.}
 }
 \description{
 Peak Calling

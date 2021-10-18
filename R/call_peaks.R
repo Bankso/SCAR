@@ -8,8 +8,7 @@
 #' @param genome_size Effective genome size.
 #' @param qvalue_cutoff q-value cutoff for peak calling.
 #' @param broad_peaks Whether the peaks are broad or not.
-#' @param broad_qvalue_cutoff If 'broad_peaks' is set,
-#'  This controls the q-value cutoff of the broad peaks.
+#' @param broad_qvalue_cutoff If 'broad_peaks' is set, this controls the q-value cutoff of the broad peaks.
 #'
 #' @export
 
