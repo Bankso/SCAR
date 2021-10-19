@@ -39,7 +39,8 @@ apt-get -y install build-essential zlib1g-dev
 
 ## Set some things for R to work
 
-R --slave -e "Sys.setenv(TAR='/bin/tar'); \
+R --slave -y -e "Sys.setenv(TAR='/bin/tar'); \
+update.packages(repo = 'https://ftp.osuosl.org/pub/cran/', lib = '/opt/conda/envs/SCAR_env/lib/R/library'); \
 devtools::install_github('Bankso/SCAR', ref='main', update='never')"
 
 ## install updated version of enaDataGet and SEACR.
