@@ -30,7 +30,7 @@ conda clean -y --all
 
 ## Install SCAR.
 
-export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
+export PATH="/opt/conda/envs/SCAR_env/bin/:$PATH"
 
 ## Get compression tools for linux
 
@@ -39,14 +39,14 @@ apt-get -y install build-essential zlib1g-dev
 
 ## Set some things for R to work
 
-echo "options(repos ='https://cran.rstudio.com/', \
-  unzip = 'internal', \
-  download.file.method ='libcurl', \
-  Ncpus = parallel::detectCores() )" >> /etc/R/Rprofile.site
+##echo "options(repos ='https://cran.rstudio.com/', \
+  ##unzip = 'internal', \
+  ##download.file.method ='libcurl', \
+  ##Ncpus = parallel::detectCores() )" >> /etc/R/Rprofile.site
 
-Rscript --no-save -e "Sys.setenv(TAR='/bin/tar'); \
-BiocManager::install("DO.db"); \
-BiocManager::install("GO.db"); \
+R -slave -e "Sys.setenv(TAR='/bin/tar'); \
+BiocManager::install('DO.db'); \
+BiocManager::install('GO.db'); \
 devtools::install_github('Bankso/SCAR',ref='main',upgrade='never')"
 
 ## install updated version of enaDataGet and SEACR.
@@ -56,5 +56,5 @@ git clone https://github.com/FredHutch/SEACR
 
 %environment
 
-export PATH=/enaBrowserTools/python3/:/opt/conda/envs/ZentTools/bin/:$PATH
-export PATH=/SEACR/:/opt/conda/envs/SCAR/bin/:$PATH
+export PATH="/enaBrowserTools/python3/:/opt/conda/envs/SCAR_env/bin/:$PATH"
+export PATH="/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH"
