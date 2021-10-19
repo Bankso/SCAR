@@ -22,7 +22,7 @@ requests parallel
 
 ## Update environment.
 
-## conda update -n SCAR_env -y -c conda-forge -c bioconda --all
+conda update -n SCAR_env -y -c conda-forge -c bioconda --all
 
 ## Clean up extra files.
 
@@ -39,15 +39,8 @@ apt-get -y install build-essential zlib1g-dev
 
 ## Set some things for R to work
 
-##echo "options(repos ='https://cran.rstudio.com/', \
-  ##unzip = 'internal', \
-  ##download.file.method ='libcurl', \
-  ##Ncpus = parallel::detectCores() )" >> /etc/R/Rprofile.site
-
-R -slave -e "Sys.setenv(TAR='/bin/tar'); \
-BiocManager::install('DO.db'); \
-BiocManager::install('GO.db'); \
-devtools::install_github('Bankso/SCAR',ref='main',upgrade='never')"
+R --slave -e "Sys.setenv(TAR='/bin/tar'); \
+devtools::install_github('Bankso/SCAR')"
 
 ## install updated version of enaDataGet and SEACR.
 
