@@ -72,6 +72,6 @@ call_peaks_SEACR <- function
   ## Save the peak directory.
   SCAR_obj <- set_settings(SCAR_obj, peak_dir = outdir)
 
-  ## Return the zent object.
+  ## Return the SCAR object.
   return(SCAR_obj)
 }

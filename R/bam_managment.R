@@ -1,7 +1,7 @@
 
 #' Add BAMs to Sample Sheet
 #'
-#' @param SCAR_obj ZentTools object.
+#' @param SCAR_obj SCAR object.
 #' @param alignment_dir Directory of aligned reads.
 #'
 #' @export

@@ -7,7 +7,7 @@
 add_bams(SCAR_obj, alignment_dir)
 }
 \arguments{
-\item{SCAR_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{alignment_dir}{Directory of aligned reads.}
 }

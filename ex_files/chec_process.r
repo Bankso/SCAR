@@ -33,4 +33,4 @@ SCAR_obj <- make_bigwigs(
 )
 
 # Call peaks
-SCAR_obj <- call_peaks(SCAR_obj, outdir = './peaks', genome_size = 12100000)
+SCAR_obj <- call_peaks_SEACR(SCAR_obj, outdir = './peaks')

@@ -7,7 +7,7 @@
 add_bgs(SCAR_obj, alignment_dir)
 }
 \arguments{
-\item{SCAR_obj}{ZentTools object.}
+\item{SCAR_obj}{SCAR object.}
 
 \item{alignment_dir}{Directory for files to be dumped to.}
 }

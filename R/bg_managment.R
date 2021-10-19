@@ -1,7 +1,7 @@
 #' Add Bedgraphs to Sample Sheet
 #' @import stringr
 #' 
-#' @param SCAR_obj ZentTools object.
+#' @param SCAR_obj SCAR object.
 #' @param alignment_dir Directory for files to be dumped to.
 #'
 #' @export
