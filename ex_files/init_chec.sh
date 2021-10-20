@@ -8,13 +8,13 @@
 #SBATCH --ntasks-per-node=1     	### Number of tasks to be launched per Node
 #SBATCH --cpus-per-task=8			### Number of CPU's used to complete submitted tasks within each requested node
 #SBATCH --mem=12GB				### Amount of preallocated memory for submitted job
-#SBATCH --account=mcknightlab     ### Account used for job submission
+#SBATCH --account=    ### Account used for job submission
 
 #This script initiates a set of actions converting fastq -> bam + bam.bai
 #Can be run as sbatch or in chunks to do only what you need
 #Before running, edit file path at line 17 to be your data directory and copy edited file to new directory
 
-cd /projects/mcknightlab/obanks/analysis/SpLiT_ChEC/Med14/30s/SCAR_test/
+cd <your working directory>
 
 mkdir -p genome && cd genome
 
@@ -26,20 +26,19 @@ wget ftp://ftp.ensembl.org/pub/release-100/gtf/saccharomyces_cerevisiae/Saccharo
 
 gunzip Saccharomyces_cerevisiae.R64-1-1.100.gtf.gz
 
-cd /projects/mcknightlab/obanks/analysis/common/
+cd <absolute path to desired image file location>
 
 module load singularity
 
 if [ ! -e ./scar_v* ]; then
-	singularity pull library://banksorion/default/scar_v0.1:sha256.12d36f4f6c72aeb2bc7ffe1c17079ac64eaeea4e5d5e117bc0e1b115bc51da4e
-
+	singularity pull library://banksorion/default/scar:sha256.d90fdffc1d5e60c22e6ee179bc15570af61951c64d26ee0853ba38e65b1e5c6f
 else
 	break
 
 fi
 
-cd /projects/mcknightlab/obanks/analysis/SpLiT_ChEC/Med14/30s/SCAR_test/
+cd <your working directory>
 
-singularity exec -eCB `pwd` -H `pwd` /projects/mcknightlab/obanks/analysis/common/scar_v* Rscript chec_process.r
+singularity exec -eCB `pwd` -H `pwd` <absolute path to desired image (.sif) file> Rscript chec_process.r
 
 exit
