@@ -57,41 +57,45 @@ call_peaks_SEACR <- function(
   ## Create the peak calling command.
   
   commands <- imap(samples, function(x, y) {
-
-    command <- str_c(
-      'bash', 
-      'SEACR_1.3.sh',
-	    args$sample_bgs,
-      args$control_bgs,
-	    num_thresh,
-      sep = sep
+	command <- str_c(
+		"bash", 
+		"SEACR_1.3.sh",
+		x,
+		y,
+		num_thresh,
+		sep = sep
     )
 
     if (norm) {
-		  command <- str_c(
-		  command, 
-		  'norm',
-		  sep = ,
-      )
+		command <- str_c(
+		command, 'norm', sep = sep
+		)
     } 
     
     else { 
-		command <- str_c(command, 'non', sep = sep )
+		command <- str_c(
+		command, 'non', sep = sep 
+		)
     }
     
     if (stringent) {
-      command <- str_c(command, 'stringent', sep = sep )
-    } else {
-      command <- str_c(command, 'relaxed', sep = sep )
+		command <- str_c(
+		command, 'stringent', sep = sep
+		)
+    }
+	else {
+		command <- str_c(
+		command, 'relaxed', sep = sep 
+		)
     }
 
     return(command)
-  }
+	}
   )
 
   ## Run the commands.
   print_message("Calling peaks from the aligned reads.")
-  walk(commands, system, ignore.stdout = TRUE, ignore.stderr = TRUE)
+  walk(commands, system)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   ## Save the peak directory.
   SCAR_obj <- set_settings(SCAR_obj, peak_dir = outdir)
