@@ -67,16 +67,11 @@ make_bigwigs <- function(
         keep.by = FALSE
       )
       controls <- map(controls, as.character)
-      samples <- c(samples, controls)
+      
+	  samples <- c(samples, controls)
     }
   } else {
-    samples <- split(
-      SCAR_obj@sample_sheet[, .(sample_name, bam_files)],
-      by = "sample_name",
-      keep.by = FALSE
-    )
-    samples <- map(samples, as.character)
-  }
+		print_message("No BAMs - something is weird here")}
 
   ## Prepare command.
   commands <- imap(samples, function(x, y) {

@@ -1,7 +1,7 @@
 
 #' Peak Calling
 #'
-#' @importFrom purrr pmap
+#' @importFrom purrr imap
 #'
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for peak files.
@@ -12,15 +12,14 @@
 #'
 #' @export
 
-call_peaks_SEACR <- function
-	(
+call_peaks_SEACR <- function(
   SCAR_obj,
   outdir = getwd(),
   num_thresh = 0.05,
   norm = TRUE,
   stringent = TRUE,
   sep = ''
-	) 
+  ) 
 {
 
   ## Input checks.
@@ -30,9 +29,34 @@ call_peaks_SEACR <- function
   ## Make sure the output directory exists.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
+  ## Get your bgs
+  if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq")) {
+    samples <- split(
+      SCAR_obj@sample_sheet[, .(sample_name, sample_bgs)],
+      by = "sample_name",
+      keep.by = FALSE
+    )
+    samples <- map(samples, as.character)
+
+    if(any(!is.na(SCAR_obj@sample_sheet[["control_bgs"]]))) {
+      controls <- split(
+        unique(SCAR_obj@sample_sheet[
+          !is.na(control_bgs),
+          .(control_name, control_bgs)
+        ]),
+        by = "control_name",
+        keep.by = FALSE
+      )
+      controls <- map(controls, as.character)
+      
+	  samples <- c(samples, controls)
+    }
+  } else {
+		print_message("No Bedgraphs - something is weird here")}
+  
   ## Create the peak calling command.
-  commands <- pmap(SCAR_obj@sample_sheet, function(...) {
-    args <- list(...)
+  
+  commands <- imap(samples, function(x, y) {
 
     command <- str_c(
       'bash', 
