@@ -27,13 +27,13 @@ make_bigwigs <- function(
   SCAR_obj,
   outdir = getwd(),
   compare = NA,
-  bin_size = 10,
+  bin_size = 1,
   normalize_using = NA,
   genome_size = NA,
   skip_non_covered = TRUE,
   min_fragment = NA,
   max_fragment = NA,
-  extend_reads = 200,
+  extend_reads = NA,
   scale_factors = NA,
   split_strands = FALSE,
   library_type = NA,
@@ -80,7 +80,6 @@ make_bigwigs <- function(
 
   ## Prepare command.
   commands <- imap(samples, function(x, y) {
-    if (is.na(compare)) {
 	command <- str_c(
       "bamCoverage",
       "-b", x,
@@ -120,37 +119,8 @@ make_bigwigs <- function(
     }
 
     return(command)
-  }})
-
-  ## Split strands if requested for RNA-seq.
-  if (split_strands) {
-    forward <- imap(commands, function(x, y) {
-      forward_file <- str_c(y, ifelse(library_type == "dUTP", "_forward.bigwig", "_reverse.bigwig"))
-      forward <- str_c(
-        x, "-o", str_c(outdir, forward_file),
-        "--filterRNAstrand", "forward",
-        sep = " "
-      )
-      return(forward)
-    })
-    names(forward) <- str_c(names(forward), "_forward")
-
-    reverse <- imap(commands, function(x, y) {
-      reverse_file <- str_c(y, ifelse(library_type == "dUTP", "_reverse.bigwig", "_forward.bigwig"))
-      reverse <- str_c(
-        x, "-o", str_c(outdir, reverse_file),
-        "--filterRNAstrand", "reverse",
-        sep = " "
-      )
-      return(reverse)
-    })
-    names(reverse) <- str_c(names(reverse), "_reverse")
-
-    commands <- c(forward, reverse)
-  } else {
-    commands <- imap(commands, ~str_c(.x, "-o", str_c(outdir, .y, ".bigwig"), sep = " "))
-  }
-
+  })
+  
   ## Set temporary directory.
   if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE)
   Sys.setenv(TMPDIR=temp_dir)
@@ -159,7 +129,7 @@ make_bigwigs <- function(
   print_message("Creating the BIGWIG coverage tracks.")
   walk(commands, system)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
-  ## Return zent tools object.
+  ## Return SCAR object.
   return(SCAR_obj)
 
 }
