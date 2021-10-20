@@ -48,7 +48,7 @@ bowtie2_index <- function(
 
 #' Bowtie2 Alignment
 #'
-#' @importFrom purrr walk imap
+#' @importFrom purrr walk imap map
 #'
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for aligned reads.
