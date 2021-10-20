@@ -29,7 +29,8 @@ SCAR_obj <- bowtie2_align(SCAR_obj, outdir = "./aligned", min_fragment = 20, max
 # Make tracks
 SCAR_obj <- make_bigwigs(
   SCAR_obj, outdir = "./bigwigs", bin_size = 1,
-  normalize_using = "CPM", extend_reads = TRUE
+  normalize_using = "RPGC", genome_size = 12000000,
+  extend_reads = TRUE
 )
 
 # Call peaks
