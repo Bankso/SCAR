@@ -26,12 +26,16 @@ SCAR_obj <- bowtie2_index(
 
 SCAR_obj <- bowtie2_align(SCAR_obj, outdir = "./aligned", min_fragment = 20, max_fragment = 200)
 
+# Make BAMs available for processing
+
+SCAR_obj <- add_bams(SCAR_obj, alignment_dir = "./aligned")
+
 # Make tracks
 SCAR_obj <- make_bigwigs(
   SCAR_obj, outdir = "./bigwigs", bin_size = 1,
-  normalize_using = "RPGC", genome_size = 12000000,
+  normalize_using = "RPGC", genome_size = "12000000",
   extend_reads = TRUE
 )
 
 # Call peaks
-SCAR_obj <- call_peaks_SEACR(SCAR_obj, outdir = './peaks')
+#SCAR_obj <- call_peaks_SEACR(SCAR_obj, outdir = './peaks')
