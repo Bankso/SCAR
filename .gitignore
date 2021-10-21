@@ -12,3 +12,4 @@ tests/
 *.RData
 *.Rbuildignore
 tests/
+working/
