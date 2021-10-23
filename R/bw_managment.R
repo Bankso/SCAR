@@ -19,22 +19,21 @@ add_bws <- function(
   }
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
-  if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq") && (compare)) {
+  if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq") && 
+      as.logical(pull_Setting(SCAR_obj, "compare"))) {
     sample_sheet[,
       sample_bws := str_c(alignment_dir, sample_name, 
-                    (if (!is.na(comp_op)) {str_c("_", comp_op)}), ".bw")
+                    (str_c("_", comp_op)), ".bw")
     ]
   }
   
-  else if (!as.logical(compare)) {
+  else {
     sample_sheet[,
-      sample_bws := str_c(alignment_dir, sample_name, 
-                    (if (!is.na(comp_op)) {str_c("_", comp_op)}), ".bw")
+      sample_bws := str_c(alignment_dir, sample_name, ".bw")
     ]
     sample_sheet[
       !is.na(control_file_1),
-      control_bws := str_c(alignment_dir, control_name, 
-                    (if (!is.na(comp_op)) {str_c("_", comp_op)}), ".bw")
+      control_bws := str_c(alignment_dir, control_name, ".bw")
     ]
   }
 

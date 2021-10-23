@@ -13,7 +13,8 @@ set_settings(
   genome_annotation = NA,
   genome_assembly = NA,
   alignment_dir = NA,
-  peak_dir = NA
+  peak_dir = NA,
+  compare = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ the gnome assembly FASTA file.}
 \item{alignment_dir}{The directory containing the aligned reads.}
 
 \item{peak_dir}{The directory containing the called peaks.}
+
+\item{compare}{For deeptools, do you want to use bamCompare?}
 }
 \description{
 Set Settings.

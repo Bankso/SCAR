@@ -14,6 +14,7 @@
 #'   the gnome assembly FASTA file.
 #' @param alignment_dir The directory containing the aligned reads.
 #' @param peak_dir The directory containing the called peaks.
+#' @param compare For deeptools, do you want to use bamCompare?
 #'
 #' @export
 
@@ -26,7 +27,8 @@ set_settings <- function(
   genome_annotation = NA,
   genome_assembly = NA,
   alignment_dir = NA,
-  peak_dir = NA
+  peak_dir = NA,
+  compare = FALSE
 ) {
 
   settings <- copy(SCAR_obj@settings)

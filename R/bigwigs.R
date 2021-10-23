@@ -71,42 +71,26 @@ make_bigwigs <- function(
       controls <- map(controls, as.character)
       samples <- c(samples, controls)
     }
-  } else {
-    samples <- split(
-      SCAR_obj@sample_sheet[, .(sample_name, bam_files)],
-      by = "sample_name",
-      keep.by = FALSE
-    )
-    samples <- map(samples, as.character)
-  }
+  } 
 
   ## Prepare command.
   commands <- imap(samples, function(x, y) {
-	  command <- if (!as.logical(compare)) {
+	  command <- if (!as.logical(pull_setting(SCAR_obj, "compare"))) {
 	    str_c("bamCoverage",
-	          "-b",
-	          str_c(
-	            pull_setting(SCAR_obj, "alignment_dir"),
-	            str_c(x, ".bam")),
+	          "-b", x,
 	          "-of", "bigwig",
 	          "-bs", bin_size,
-	          "-o", str_c(outdir, str_c(x, ".bw")),
+	          "-o", str_c(outdir, sample_name, ".bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"),
 	          sep = " ")
 	  }
-	  else if (as.logical(compare)) {
+	  else if (as.logical(pull_setting(SCAR_obj, "compare"))) {
 	    str_c("bamCompare",
-	          "-b1",
-	          str_c(
-	            pull_setting(SCAR_obj, "alignment_dir"),
-	            str_c(x, ".bam")),
-	          "-b2",
-	          str_c(
-	            pull_setting(SCAR_obj, "alignment_dir"),
-	            str_c(y, ".bam")),
+	          "-b1", x,
+	          "-b2", y,
 	          "--operation", comp_op,
 	          "-bs", bin_size,
-	          "-o", str_c(outdir, str_c(x, comp_op, ".bw")),
+	          "-o", str_c(outdir, sample_name, (str_c("_", comp_op)), ".bw"),
 	          "-p", pull_setting(SCAR_obj, "ncores"),
 	          sep = " ")
 	  }
