@@ -7,7 +7,8 @@
 make_bigwigs(
   SCAR_obj,
   outdir = getwd(),
-  compare = NA,
+  compare = FALSE,
+  comp_op = "log2",
   bin_size = 1,
   normalize_using = NA,
   genome_size = NA,
@@ -26,13 +27,15 @@ make_bigwigs(
 
 \item{outdir}{Output directory.}
 
-\item{compare}{set to true if wanting to use bamCompare (coming soon).}
+\item{compare}{set to true if wanting to use bamCompare}
+
+\item{comp_op}{Operation for bamCompare}
 
 \item{bin_size}{Bin size for coverage summary.}
 
 \item{normalize_using}{Either 'CPM' or 'RPGC'.}
 
-\item{genome_size}{Effective genome size.}
+\item{genome_size}{Effective genome size, req'd for RPGC.}
 
 \item{skip_non_covered}{Should regions without coverage be skipped.}
 
@@ -45,7 +48,7 @@ Set to NA to not extend reads.}
 
 \item{scale_factors}{Takes a named vector, with the name being the sample name,
 and the value being the scale factor.
-If set will override 'normalzie_using' option.}
+If set will override 'normalize_using' option.}
 
 \item{split_strands}{For RNA-seq, whether to split the strands into
 positive and minus strand files.}

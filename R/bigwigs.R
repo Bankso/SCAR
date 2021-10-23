@@ -3,10 +3,11 @@
 #'
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
-#' @param compare set to true if wanting to use bamCompare (coming soon).
+#' @param compare set to true if wanting to use bamCompare
+#' @param comp_op Operation for bamCompare
 #' @param bin_size Bin size for coverage summary.
 #' @param normalize_using Either 'CPM' or 'RPGC'.
-#' @param genome_size Effective genome size.
+#' @param genome_size Effective genome size, req'd for RPGC.
 #' @param skip_non_covered Should regions without coverage be skipped.
 #' @param min_fragment Minimum fragment length.
 #' @param max_fragment Maximum fragment length.
@@ -14,7 +15,7 @@
 #'   Set to NA to not extend reads.
 #' @param scale_factors Takes a named vector, with the name being the sample name,
 #'   and the value being the scale factor.
-#'   If set will override 'normalzie_using' option.
+#'   If set will override 'normalize_using' option.
 #' @param split_strands For RNA-seq, whether to split the strands into
 #'   positive and minus strand files.
 #' @param library_type If split_strands is TRUE, specify library chemistry
@@ -26,7 +27,8 @@
 make_bigwigs <- function(
   SCAR_obj,
   outdir = getwd(),
-  compare = NA,
+  compare = FALSE,
+  comp_op = "log2",
   bin_size = 1,
   normalize_using = NA,
   genome_size = NA,
@@ -67,44 +69,75 @@ make_bigwigs <- function(
         keep.by = FALSE
       )
       controls <- map(controls, as.character)
-      
-	  samples <- c(samples, controls)
+      samples <- c(samples, controls)
     }
   } else {
-		print_message("No BAMs - something is weird here")}
+    samples <- split(
+      SCAR_obj@sample_sheet[, .(sample_name, bam_files)],
+      by = "sample_name",
+      keep.by = FALSE
+    )
+    samples <- map(samples, as.character)
+  }
 
   ## Prepare command.
   commands <- imap(samples, function(x, y) {
-	command <- str_c(
-      "bamCoverage",
-      "-b", x,
-      "-of", "bigwig",
-      "-bs", bin_size,
-      "-p", pull_setting(SCAR_obj, "ncores"),
-      sep = " "
-    )
+	  command <- if (!as.logical(compare)) {
+	    str_c("bamCoverage",
+	          "-b",
+	          str_c(
+	            pull_setting(SCAR_obj, "alignment_dir"),
+	            str_c(x, ".bam")),
+	          "-of", "bigwig",
+	          "-bs", bin_size,
+	          "-o", str_c(outdir, str_c(x, ".bw")),
+	          "-p", pull_setting(SCAR_obj, "ncores"),
+	          sep = " ")
+	  }
+	  else if (as.logical(compare)) {
+	    str_c("bamCompare",
+	          "-b1",
+	          str_c(
+	            pull_setting(SCAR_obj, "alignment_dir"),
+	            str_c(x, ".bam")),
+	          "-b2",
+	          str_c(
+	            pull_setting(SCAR_obj, "alignment_dir"),
+	            str_c(y, ".bam")),
+	          "--operation", comp_op,
+	          "-bs", bin_size,
+	          "-o", str_c(outdir, str_c(x, comp_op, ".bw")),
+	          "-p", pull_setting(SCAR_obj, "ncores"),
+	          sep = " ")
+	  }
 	
     if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
-      command <- str_c(command, "--normalizeUsing", normalize_using, sep = " ")
+      command <- str_c(
+        command, "--normalizeUsing", normalize_using, sep = " ")
     }
 
     if (all(!is.na(scale_factors))) {
-      command <- str_c(command, str_c("--scaleFactor", scale_factors[y], sep = " "), sep = " ")
+      command <- str_c(command, str_c(
+        "--scaleFactor", scale_factors[y], sep = " "), sep = " ")
     }
 
     if (!is.na(genome_size)) {
-      command <- str_c(command, "--effectiveGenomeSize", genome_size, sep = " ")
+      command <- str_c(
+        command, "--effectiveGenomeSize", genome_size, sep = " ")
     }
 
     if (skip_non_covered) {
-      command <- str_c(command, "--skipNonCoveredRegions", sep = " ")
+      command <- str_c(
+        command, "--skipNonCoveredRegions", sep = " ")
     }
 
     if (!is.na(min_fragment)) {
-      command <- str_c(command, "--minFragmentLength", min_fragment, sep = " ")
+      command <- str_c(
+        command, "--minFragmentLength", min_fragment, sep = " ")
     }
     if (!is.na(max_fragment)) {
-      command <- str_c(command, "--maxFragmentLength", max_fragment, sep = " ")
+      command <- str_c(
+        command, "--maxFragmentLength", max_fragment, sep = " ")
     }
 
     if (!is.na(extend_reads) && paired_status) {
@@ -124,6 +157,14 @@ make_bigwigs <- function(
   print_message("Creating the BIGWIG coverage tracks.")
   walk(commands, system)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
+  ## Add settings to SCAR object.
+  print_message("Assigning alignment dir to outdir")
+  SCAR_obj <- set_settings(SCAR_obj, alignment_dir = outdir)
+  
+  ## Add bw files to sample_sheet.
+  print_message("Assigning bws to sample sheet")
+  SCAR_obj <- add_bws(SCAR_obj, alignment_dir = outdir)
+  
   ## Return SCAR object.
   return(SCAR_obj)
 

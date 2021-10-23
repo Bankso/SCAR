@@ -180,9 +180,11 @@ bowtie2_align <- function(
   })
 
   ## Add settings to SCAR object.
+  print_message("Assigning alignment dir to outdir")
   SCAR_obj <- set_settings(SCAR_obj, alignment_dir = outdir)
 
   ## Add bam files to sample_sheet.
+  print_message("Assigning bams to sample sheet")
   SCAR_obj <- add_bams(SCAR_obj, alignment_dir = outdir)
 
   ## Return the SCAR object.

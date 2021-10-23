@@ -1,30 +1,26 @@
 
-#' Add BAMs to Sample Sheet
+#' Add BEDs to Sample Sheet
 #'
 #' @param SCAR_obj SCAR object.
-#' @param alignment_dir Directory of aligned reads.
+#' @param peak_dir Peak directory for SEACR output
 #'
 #' @export
 
-add_bams <- function(
+add_beds <- function(
   SCAR_obj,
-  alignment_dir
+  peak_dir
 ) {
 
   ## Grab some info from object and prepare inputs.
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
-  if (!str_detect(alignment_dir, "/$")) {
-    alignment_dir <- str_c(alignment_dir, "/")
+  if (!str_detect(peak_dir, "/$")) {
+    peak_dir <- str_c(peak_dir, "/")
   }
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
   if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq")) {
     sample_sheet[,
-      sample_bams := str_c(alignment_dir, sample_name, ".bam")
-    ]
-    sample_sheet[
-      !is.na(control_file_1),
-      control_bams := str_c(alignment_dir, control_name, ".bam")
+      sample_beds := str_c(peak_dir, sample_name, ".bed")
     ]
   }
 

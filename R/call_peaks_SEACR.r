@@ -38,7 +38,7 @@ call_peaks_SEACR <- function(
     )
     samples <- map(samples, as.character)
 
-    if(any(!is.na(SCAR_obj@sample_sheet[["control_bgs"]]))) {
+    if (any(!is.na(SCAR_obj@sample_sheet[["control_bgs"]]))) {
       controls <- split(
         unique(SCAR_obj@sample_sheet[
           !is.na(control_bgs),
@@ -52,18 +52,22 @@ call_peaks_SEACR <- function(
 	  samples <- c(samples, controls)
     }
   } else {
-		print_message("No Bedgraphs - something is weird here")}
+		print_message("No Bedgraphs - check your process file")}
   
   ## Create the peak calling command.
   
   commands <- imap(samples, function(x, y) {
 	command <- str_c(
-		"bash", 
-		"SEACR_1.3.sh",
-		x,
-		y,
+		'bash', 
+		'SEACR_1.3.sh',
+		str_c(
+		  pull_setting(SCAR_obj, "alignment_dir"),
+		  str_c(x, ".bedgraph")),
+		str_c(
+		  pull_setting(SCAR_obj, "alignment_dir"),
+		  str_c(y, ".bedgraph")),
 		num_thresh,
-		sep = sep
+		sep = " "
     )
 
     if (norm) {
@@ -83,12 +87,15 @@ call_peaks_SEACR <- function(
 		command, 'stringent', sep = sep
 		)
     }
-	else {
+	  else {
 		command <- str_c(
 		command, 'relaxed', sep = sep 
 		)
     }
-
+    
+	  command <- str_c(
+	  command, str_c(outdir, x), sep = sep 
+	  )
     return(command)
 	}
   )
@@ -99,7 +106,10 @@ call_peaks_SEACR <- function(
 
   ## Save the peak directory.
   SCAR_obj <- set_settings(SCAR_obj, peak_dir = outdir)
-
+  
+  ## Add new BEDs to peak_dir
+  SCAR_obj <- add_beds(SCAR_obj, peak_dir = outdir)
+  
   ## Return the SCAR object.
   return(SCAR_obj)
 }
