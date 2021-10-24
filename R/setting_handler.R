@@ -28,7 +28,7 @@ set_settings <- function(
   genome_assembly = NA,
   alignment_dir = NA,
   peak_dir = NA,
-  compare = FALSE
+  compare = NA
 ) {
 
   settings <- copy(SCAR_obj@settings)
@@ -65,6 +65,10 @@ set_settings <- function(
     settings[parameter == "peak_dir", value := peak_dir]
   }
 
+  if (!is.na(compare)) {
+    settings[parameter == "compare", value := compare]
+  }
+  
   SCAR_obj@settings <- settings
   return(SCAR_obj)
 }

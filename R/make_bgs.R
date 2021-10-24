@@ -6,8 +6,10 @@
 #'
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
-#' @param pair_lr TRUE or FALSE, calculate coverage as number of frags covering each bp (paired) 
-#' @param frag_size Use stated fragment size from pairs instead of read length (paired)
+#' @param pair_lr TRUE or FALSE, calculate coverage as number of 
+#'        frags covering each bp (paired) 
+#' @param frag_size Use stated fragment size from pairs instead 
+#'        of read length (paired)
 #'
 #' @export
 
@@ -23,7 +25,10 @@ make_bgs <- function(
   
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
-
+  
+  ## Make sure we have the correct BAM directory
+  set_settings(SCAR_obj, alignment_dir = "./aligned")
+  
   ## Prepare command.
   commands <- imap(samples, function(x, y) {
 	command <- str_c(
@@ -45,10 +50,6 @@ make_bgs <- function(
     return(command)
   })
   
-  ## Set temporary directory.
-  if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE)
-  Sys.setenv(TMPDIR=temp_dir)
-
   ## Run commands.
   print_message("Creating bedgraph files from BAMs.")
   walk(commands, system)#, ignore.stdout = TRUE, ignore.stderr = TRUE)

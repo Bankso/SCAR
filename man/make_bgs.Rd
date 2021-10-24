@@ -11,9 +11,11 @@ make_bgs(SCAR_obj, outdir = getwd(), pair_lr = FALSE, frag_size = FALSE)
 
 \item{outdir}{Output directory.}
 
-\item{pair_lr}{TRUE or FALSE, calculate coverage as number of frags covering each bp (paired)}
+\item{pair_lr}{TRUE or FALSE, calculate coverage as number of
+frags covering each bp (paired)}
 
-\item{frag_size}{Use stated fragment size from pairs instead of read length (paired)}
+\item{frag_size}{Use stated fragment size from pairs instead
+of read length (paired)}
 }
 \description{
 Make bedgraphs

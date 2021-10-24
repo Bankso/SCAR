@@ -3,7 +3,6 @@
 #'
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
-#' @param compare set to true if wanting to use bamCompare
 #' @param comp_op Operation for bamCompare
 #' @param bin_size Bin size for coverage summary.
 #' @param normalize_using Either 'CPM' or 'RPGC'.
@@ -13,8 +12,8 @@
 #' @param max_fragment Maximum fragment length.
 #' @param extend_reads Distance to extend single-end reads.
 #'   Set to NA to not extend reads.
-#' @param scale_factors Takes a named vector, with the name being the sample name,
-#'   and the value being the scale factor.
+#' @param scale_factors Takes a named vector, with the name being the 
+#'   sample name, and the value being the scale factor.
 #'   If set will override 'normalize_using' option.
 #' @param split_strands For RNA-seq, whether to split the strands into
 #'   positive and minus strand files.
@@ -27,7 +26,6 @@
 make_bigwigs <- function(
   SCAR_obj,
   outdir = getwd(),
-  compare = FALSE,
   comp_op = "log2",
   bin_size = 1,
   normalize_using = NA,
@@ -46,6 +44,7 @@ make_bigwigs <- function(
   if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
+  compare <- as.logical(pull_setting(SCAR_obj, "compare"))
 
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
@@ -75,26 +74,30 @@ make_bigwigs <- function(
 
   ## Prepare command.
   commands <- imap(samples, function(x, y) {
-	  command <- if (!as.logical(pull_setting(SCAR_obj, "compare"))) {
+	  command <- (
+	    if (compare != TRUE) {
+	    print_message("bamCoverage selected based on inputs")
 	    str_c("bamCoverage",
 	          "-b", x,
 	          "-of", "bigwig",
 	          "-bs", bin_size,
-	          "-o", str_c(outdir, SCAR_obj@sample_sheet[, .sample_name], ".bw", sep = ""),
+	          "-o", str_c(outdir, SCAR_obj@sample_sheet[, .(sample_name)], 
+	                      ".bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"),
 	          sep = " ")
 	  }
-	  else if (as.logical(pull_setting(SCAR_obj, "compare"))) {
+	  else {
+	    print_message("bamCompare selected based on inputs")
 	    str_c("bamCompare",
 	          "-b1", x,
 	          "-b2", y,
 	          "--operation", comp_op,
 	          "-bs", bin_size,
-	          "-o", str_c(outdir, SCAR_obj@sample_sheet[, .sample_name], 
-	                      (str_c("_", comp_op)), ".bw", sep = ""),
+	          "-o", str_c(outdir, SCAR_obj@sample_sheet[, .(sample_name)],
+	                 "_control.bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"),
 	          sep = " ")
-	  }
+	  })
 	
     if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
       command <- str_c(

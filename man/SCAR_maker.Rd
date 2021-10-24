@@ -4,7 +4,14 @@
 \alias{SCAR_maker}
 \title{SCAR Object Constructor Function}
 \usage{
-SCAR_maker(analysis_type, sample_sheet, sep = "\\t", paired = TRUE, ncores = 1)
+SCAR_maker(
+  analysis_type,
+  sample_sheet,
+  sep = "\\t",
+  paired = TRUE,
+  ncores = 1,
+  compare = TRUE
+)
 }
 \arguments{
 \item{analysis_type}{One of 'ChIP-seq', 'ChEC-seq', or 'SChEC-seq'.}
@@ -16,6 +23,8 @@ SCAR_maker(analysis_type, sample_sheet, sep = "\\t", paired = TRUE, ncores = 1)
 \item{paired}{Whether the run is paired (TRUE) or unpaired (FALSE)}
 
 \item{ncores}{The number of cores/threads to use.}
+
+\item{compare}{TRUE/FALSE perform bamCompare instead of Coverage}
 }
 \value{
 A SCAR object.

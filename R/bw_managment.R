@@ -14,16 +14,17 @@ add_bws <- function(
 
   ## Grab some info from object and prepare inputs.
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
+  compare <- as.logical(pull_setting(SCAR_obj, "compare"))
+  
   if (!str_detect(alignment_dir, "/$")) {
     alignment_dir <- str_c(alignment_dir, "/")
   }
+  
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
-  if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq") && 
-      as.logical(pull_Setting(SCAR_obj, "compare"))) {
+  if (compare) {
     sample_sheet[,
-      sample_bws := str_c(alignment_dir, sample_name, 
-                    (str_c("_", comp_op)), ".bw")
+      sample_bws := str_c(alignment_dir, sample_name, "_control.bw")
     ]
   }
   
@@ -37,9 +38,9 @@ add_bws <- function(
     ]
   }
 
-  ## Add new sample sheet back to zent object.
+  ## Add new sample sheet back to SCAR object.
   SCAR_obj@sample_sheet <- sample_sheet
 
-  ## Return the zent object.
+  ## Return the SCAR object.
   return(SCAR_obj)
 }

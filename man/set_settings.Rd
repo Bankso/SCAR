@@ -14,7 +14,7 @@ set_settings(
   genome_assembly = NA,
   alignment_dir = NA,
   peak_dir = NA,
-  compare = FALSE
+  compare = NA
 )
 }
 \arguments{

@@ -30,8 +30,7 @@ call_peaks_SEACR <- function(
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   ## Get your bgs
-  if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq")) {
-    samples <- split(
+  samples <- split(
       SCAR_obj@sample_sheet[, .(sample_name, sample_bgs)],
       by = "sample_name",
       keep.by = FALSE
@@ -51,8 +50,6 @@ call_peaks_SEACR <- function(
       
 	  samples <- c(samples, controls)
     }
-  } else {
-		print_message("No Bedgraphs - check your process file")}
   
   ## Create the peak calling command.
   

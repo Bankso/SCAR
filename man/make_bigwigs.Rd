@@ -7,7 +7,6 @@
 make_bigwigs(
   SCAR_obj,
   outdir = getwd(),
-  compare = FALSE,
   comp_op = "log2",
   bin_size = 1,
   normalize_using = NA,
@@ -27,8 +26,6 @@ make_bigwigs(
 
 \item{outdir}{Output directory.}
 
-\item{compare}{set to true if wanting to use bamCompare}
-
 \item{comp_op}{Operation for bamCompare}
 
 \item{bin_size}{Bin size for coverage summary.}
@@ -46,8 +43,8 @@ make_bigwigs(
 \item{extend_reads}{Distance to extend single-end reads.
 Set to NA to not extend reads.}
 
-\item{scale_factors}{Takes a named vector, with the name being the sample name,
-and the value being the scale factor.
+\item{scale_factors}{Takes a named vector, with the name being the
+sample name, and the value being the scale factor.
 If set will override 'normalize_using' option.}
 
 \item{split_strands}{For RNA-seq, whether to split the strands into
