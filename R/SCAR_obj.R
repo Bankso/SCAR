@@ -40,9 +40,9 @@ SCAR_maker <- function(
   analysis_type,
   sample_sheet,
   sep = "\t",
-  paired = TRUE,
-  ncores = 1,
-  compare = TRUE
+  paired = NA,
+  ncores = NA,
+  compare = NA
 ) {
 
   ## Prepare the sample sheet.

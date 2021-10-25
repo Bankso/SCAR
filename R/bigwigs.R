@@ -35,7 +35,7 @@ make_bigwigs <- function(
   max_fragment = NA,
   extend_reads = NA,
   scale_factors = NA,
-  split_strands = FALSE,
+  split_strands = NA,
   library_type = NA,
   temp_dir = "./temp"
 ) {
@@ -81,7 +81,7 @@ make_bigwigs <- function(
 	          "-b", x,
 	          "-of", "bigwig",
 	          "-bs", bin_size,
-	          "-o", str_c(outdir, SCAR_obj@sample_sheet[, .(sample_name)], 
+	          "-o", str_c(outdir, (SCAR_obj@sample_sheet[, .(sample_name)]), 
 	                      ".bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"),
 	          sep = " ")
@@ -93,13 +93,19 @@ make_bigwigs <- function(
 	          "-b2", y,
 	          "--operation", comp_op,
 	          "-bs", bin_size,
-	          "-o", str_c(outdir, SCAR_obj@sample_sheet[, .(sample_name)],
+	          "-o", str_c(outdir, (SCAR_obj@sample_sheet[, .(sample_name)]),
 	                 "_control.bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"),
 	          sep = " ")
 	  })
 	
-    if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
+    
+	if (compare) {
+      command <- str_c(
+        command, "--scaleFactorsMethod", "None", sep = " ")
+    }
+	
+	if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
       command <- str_c(
         command, "--normalizeUsing", normalize_using, sep = " ")
     }
