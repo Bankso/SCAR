@@ -13,3 +13,5 @@ tests/
 *.Rbuildignore
 tests/
 working/
+
+*.Rproj.*
