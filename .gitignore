@@ -13,5 +13,5 @@ tests/
 *.Rbuildignore
 tests/
 working/
-.\ex_files\*.sh
+ex_files/
 *.Rproj.*
