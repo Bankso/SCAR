@@ -73,7 +73,7 @@ make_bigwigs <- function(
   } 
 
   ## Prepare command.
-  commands <- imap(samples, function(x, y) {
+  commands <- iwalk(samples, function(x, y) {
 	  command <- (
 	    if (compare != TRUE) {
 	    print_message("bamCoverage selected based on inputs")
