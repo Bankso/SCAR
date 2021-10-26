@@ -37,7 +37,7 @@ export PATH="/opt/conda/envs/SCAR_env/bin/:$PATH"
 apt-get -y update
 apt-get -y install build-essential zlib1g-dev
 
-## Set some things for R to work
+## Set some things for R to work and download SCAR
 
 R --slave -e "Sys.setenv(TAR='/bin/tar'); \
 BiocManager::install(ask = FALSE);
@@ -47,6 +47,10 @@ devtools::install_github('Bankso/SCAR', ref='main')"
 
 git clone https://github.com/rpolicastro/enaBrowserTools.git
 git clone https://github.com/FredHutch/SEACR
+
+## Ensure files can be accessed
+
+chmod -R o+rX /opt/conda
 
 %environment
 

@@ -93,8 +93,8 @@ make_bigwigs <- function(
 	          "-b2", y,
 	          "--operation", comp_op,
 	          "-bs", bin_size,
-	          "-o", str_c(outdir, (SCAR_obj@sample_sheet[, .(sample_name)]),
-	                 "_control.bw", sep = ""),
+	          "-o", str_c(outdir, (SCAR_obj@sample_sheet[
+	              , .(sample_name)]), "_", comp_op, "_control.bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"),
 	          sep = " ")
 	  })

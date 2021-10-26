@@ -9,7 +9,7 @@
 add_bws <- function(
   SCAR_obj,
   alignment_dir,
-  comp_op = NA
+  comp_op = comp_op
 ) {
 
   ## Grab some info from object and prepare inputs.
@@ -22,9 +22,10 @@ add_bws <- function(
   
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
-  if (compare) {
+  if (compare == TRUE) {
     sample_sheet[,
-      sample_bws := str_c(alignment_dir, sample_name, "_control.bw")
+      sample_bws := str_c(
+        alignment_dir, sample_name, "_", comp_op, "_control.bw")
     ]
   }
   
