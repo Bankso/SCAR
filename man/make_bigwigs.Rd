@@ -16,7 +16,7 @@ make_bigwigs(
   max_fragment = NA,
   extend_reads = NA,
   scale_factors = NA,
-  split_strands = FALSE,
+  split_strands = NA,
   library_type = NA,
   temp_dir = "./temp"
 )
