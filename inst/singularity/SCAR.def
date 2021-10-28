@@ -17,7 +17,7 @@ conda create -n SCAR_env -y -c conda-forge -c bioconda -c defaults \
 r-base r-devtools r-tidyverse r-data.table r-ggpubr r-biocmanager \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
-fastqc star samtools bowtie2 deeptools bedtools \
+fastqc star samtools bowtie2 deeptools bedtools homer\
 parallel requests
 
 ## Update environment.
@@ -30,7 +30,7 @@ conda clean -y --all
 
 ## Install SCAR.
 
-export PATH="/opt/conda/envs/SCAR_env/bin/:$PATH"
+export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
 
 ## Get compression tools for linux
 
@@ -50,9 +50,12 @@ git clone https://github.com/FredHutch/SEACR
 
 ## Ensure files can be accessed
 
-chmod -R o+rX /opt/conda
-
 %environment
 
-export PATH="/enaBrowserTools/python3/:/opt/conda/envs/SCAR_env/bin/:$PATH"
-export PATH="/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH"
+export PATH=/enaBrowserTools/python3/:/opt/conda/envs/SCAR_env/bin/:$PATH
+export PATH=/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH
+
+%runscript
+
+chmod -R 755 /opt/conda
+mkdir /opt/conda/process

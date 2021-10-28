@@ -4,7 +4,7 @@
 \alias{add_bams}
 \title{Add BAMs to Sample Sheet}
 \usage{
-add_bams(SCAR_obj, alignment_dir)
+add_bams(SCAR_obj, alignment_dir = alignment_dir)
 }
 \arguments{
 \item{SCAR_obj}{SCAR object.}

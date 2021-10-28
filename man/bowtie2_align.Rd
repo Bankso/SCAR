@@ -10,6 +10,7 @@ bowtie2_align(
   alignment_mode = "end-to-end",
   min_fragment = NA,
   max_fragment = NA,
+  mapq_val = 20,
   max_memory = "1G"
 )
 }
@@ -23,6 +24,9 @@ bowtie2_align(
 \item{min_fragment}{Minimum fragment length (paired end).}
 
 \item{max_fragment}{Maximum fragment length (paired end).}
+
+\item{mapq_val}{Minimum MAPQ value to accept reads. Used to filter via
+samtools post alignment}
 
 \item{max_memory}{Maximum memory per thread for samtools.}
 }

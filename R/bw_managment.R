@@ -8,7 +8,7 @@
 
 add_bws <- function(
   SCAR_obj,
-  alignment_dir,
+  alignment_dir = alignment_dir,
   comp_op = comp_op
 ) {
 

@@ -55,6 +55,8 @@ bowtie2_index <- function(
 #' @param alignment_mode Either 'end-to-end' or 'local'.
 #' @param min_fragment Minimum fragment length (paired end).
 #' @param max_fragment Maximum fragment length (paired end).
+#' @param mapq_val Minimum MAPQ value to accept reads. Used to filter via
+#'                 samtools post alignment 
 #' @param max_memory Maximum memory per thread for samtools.
 #'
 #' @export
@@ -65,6 +67,7 @@ bowtie2_align <- function(
   alignment_mode = "end-to-end",
   min_fragment = NA,
   max_fragment = NA,
+  mapq_val = 20,
   max_memory = "1G"
 ) {
 
@@ -158,7 +161,7 @@ bowtie2_align <- function(
   })
 
   ## Make coordinate sorted and indexed bams.
-  print_message("Coordinate sorting and indexing the BAMs")
+  print_message("Coordinate sorting, filtering and indexing the BAMs")
   walk(names(samples), function(x) {
     command <- str_c(
       "samtools", "sort",
@@ -172,8 +175,17 @@ bowtie2_align <- function(
     system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
     command <- str_c(
-      "samtools", "index",
+      "samtools", "view", "-q", mapq_val,
+      "-b", 
       str_c(outdir, str_c(x, ".bam")),
+      ">", str_c(outdir, str_c(x, "_sorted.bam")),
+      sep = " "
+    )
+    system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    
+    command <- str_c(
+      "samtools", "index",
+      str_c(outdir, str_c(x, "_sorted.bam")),
       sep = " "
     )
     system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)

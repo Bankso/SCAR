@@ -8,7 +8,7 @@
 
 add_bams <- function(
   SCAR_obj,
-  alignment_dir
+  alignment_dir=alignment_dir
 ) {
 
   ## Grab some info from object and prepare inputs.
