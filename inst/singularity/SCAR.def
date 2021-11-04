@@ -57,5 +57,5 @@ export PATH=/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH
 
 %runscript
 
-chmod -R 775 /opt/conda
+chmod -R 777 /opt/conda
 mkdir /opt/conda/process
