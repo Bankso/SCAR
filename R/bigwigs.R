@@ -41,7 +41,6 @@ make_bigwigs <- function(
 ) {
 
   ## Input checks.
-  if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
   compare <- as.logical(pull_setting(SCAR_obj, "compare"))

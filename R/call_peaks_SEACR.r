@@ -18,12 +18,11 @@ call_peaks_SEACR <- function(
   num_thresh = 0.05,
   norm = TRUE,
   stringent = TRUE,
-  sep = ''
+  sep = ""
   ) 
 {
 
   ## Input checks.
-  if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
 
   ## Make sure the output directory exists.
@@ -69,29 +68,29 @@ call_peaks_SEACR <- function(
 
     if (norm) {
 		command <- str_c(
-		command, 'norm', sep = sep
+		command, 'norm', sep = " "
 		)
     } 
     
     else { 
 		command <- str_c(
-		command, 'non', sep = sep 
+		command, 'non', sep = " "
 		)
     }
     
     if (stringent) {
 		command <- str_c(
-		command, 'stringent', sep = sep
+		command, 'stringent', sep = " "
 		)
     }
 	  else {
 		command <- str_c(
-		command, 'relaxed', sep = sep 
+		command, 'relaxed', sep = " " 
 		)
     }
     
 	  command <- str_c(
-	  command, str_c(outdir, x), sep = sep 
+	  command, str_c(outdir, x), sep = " " 
 	  )
     return(command)
 	}

@@ -13,9 +13,6 @@ add_beds <- function(
 
   ## Grab some info from object and prepare inputs.
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
-  if (!str_detect(peak_dir, "/$")) {
-    peak_dir <- str_c(peak_dir, "/")
-  }
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
   if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq")) {

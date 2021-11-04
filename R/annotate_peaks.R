@@ -23,9 +23,6 @@ annotate_peaks <- function(
   feature_type = "gene"
 ) {
 
-  ## Input checks.
-  if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
-
   ## Make sure the output directory exists.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE) 
 

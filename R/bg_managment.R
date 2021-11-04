@@ -13,9 +13,6 @@ add_bgs <- function(
 
   ## Grab some info from object and prepare inputs.
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
-  if (!str_detect(alignment_dir, "/$")) {
-    alignment_dir <- str_c(alignment_dir, "/")
-  }
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
   

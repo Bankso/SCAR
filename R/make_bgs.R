@@ -20,7 +20,6 @@ make_bgs <- function(
   frag_size = FALSE
  ) {
   ## Input checks.
-  if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
   
   ## Make output directory if it doesn't exist.

@@ -15,9 +15,6 @@ bowtie2_index <- function(
   index_name = "bowtie2_index"
 ) {
 
-  ## Input checks.
-  if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
-
   ## Make sure output directory exists.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
@@ -72,7 +69,6 @@ bowtie2_align <- function(
 ) {
 
   ## Input checks.
-  if (!str_detect(outdir, "/$")) outdir <- str_c(outdir, "/")
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
 
   ## Create output directory if it exists.
