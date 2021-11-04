@@ -8,17 +8,13 @@
 
 add_bws <- function(
   SCAR_obj,
-  alignment_dir = alignment_dir,
-  comp_op = comp_op
+  alignment_dir=alignment_dir,
+  comp_op=comp_op
 ) {
 
   ## Grab some info from object and prepare inputs.
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
   compare <- as.logical(pull_setting(SCAR_obj, "compare"))
-  
-  if (!str_detect(alignment_dir, "/$")) {
-    alignment_dir <- str_c(alignment_dir, "/")
-  }
   
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
