@@ -37,7 +37,7 @@ export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
 apt-get -y update
 apt-get -y install build-essential zlib1g-dev
 
-## Set some things for R to work and download SCAR
+## Set unpack target, extract necessary packages, install SCAR
 
 R --slave -e "Sys.setenv(TAR='/bin/tar'); \
 BiocManager::install(ask = FALSE);
@@ -50,6 +50,8 @@ git clone https://github.com/FredHutch/SEACR
 
 ## Ensure files can be accessed
 
+chmod -R o+rx /opt/conda
+
 %environment
 
 export PATH=/enaBrowserTools/python3/:/opt/conda/envs/SCAR_env/bin/:$PATH
@@ -57,5 +59,4 @@ export PATH=/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH
 
 %runscript
 
-chmod -R 777 /opt/conda
 mkdir /opt/conda/process
