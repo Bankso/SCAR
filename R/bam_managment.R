@@ -17,11 +17,11 @@ add_bams <- function(
 
   if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq")) {
     sample_sheet[,
-      sample_bams := str_c(alignment_dir, sample_name, ".bam")
+      sample_bams := str_c(alignment_dir, sample_name, "_sorted.bam")
     ]
     sample_sheet[
       !is.na(control_file_1),
-      control_bams := str_c(alignment_dir, control_name, ".bam")
+      control_bams := str_c(alignment_dir, control_name, "_sorted.bam")
     ]
   }
 
