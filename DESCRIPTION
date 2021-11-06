@@ -1,23 +1,26 @@
 Package: SCAR
 Type: Package
 Title: SpLiT-ChEC analysis with R
-Version: 0.3
+Version: 0.4
 Authors@R: person("Orion", "Banks", role = c("aut", "cre"),
                email = "obanks@uoregon.edu")
 Maintainer: Orion Banks <obanks@uoregon.edu>
-Description: Allows analysis of sequencing data by collecting a bunch of scripts and programs in one place. Combined with singularity, this affords a consistent and easy to use processing environment which improves reproducibility.
+Description: Allows analysis of sequencing data by collecting a bunch of \
+              scripts and programs in one place. Combined with singularity, \
+              this affords a consistent processing environment which improves \
+              reproducibility.
 Notes: Based on ZentTools from gzentner and rpolicastro.
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: TRUE
 Imports:
-    methods ,
-    stringr ,
-    data.table ,
-    purrr ,
-    ChIPseeker ,
-    GenomicFeatures ,
-    rtracklayer ,
+    methods,
+    stringr,
+    data.table,
+    purrr,
+    ChIPseeker,
+    GenomicFeatures,
+    rtracklayer,
     Rsamtools 
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
