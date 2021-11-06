@@ -28,7 +28,7 @@ conda update -n SCAR_env -y -c conda-forge -c bioconda -c defaults --all
 
 conda clean -y --all
 
-## Install SCAR.
+## Install SCAR_env.
 
 export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
 
@@ -48,15 +48,7 @@ devtools::install_github('Bankso/SCAR', ref='main')"
 git clone https://github.com/rpolicastro/enaBrowserTools.git
 git clone https://github.com/FredHutch/SEACR
 
-## Ensure files can be accessed
-
-chmod -R o+rx /opt/conda
-
 %environment
 
 export PATH=/enaBrowserTools/python3/:/opt/conda/envs/SCAR_env/bin/:$PATH
 export PATH=/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH
-
-%runscript
-
-mkdir /opt/conda/process

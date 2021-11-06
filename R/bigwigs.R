@@ -49,12 +49,11 @@ make_bigwigs <- function(
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   ## Get bams.
-  if (analysis_type %in% c("ChIP-seq", "ChEC-seq", "SChEC-seq")) {
     samples <- split(
       SCAR_obj@sample_sheet[, .(sample_name, sample_bams)],
       by = "sample_name",
       keep.by = FALSE
-    )
+      )
     samples <- map(samples, as.character)
 
     if(any(!is.na(SCAR_obj@sample_sheet[["control_bams"]]))) {
@@ -69,34 +68,31 @@ make_bigwigs <- function(
       controls <- map(controls, as.character)
       samples <- c(samples, controls)
     }
-  } 
 
   ## Prepare command.
   commands <- iwalk(samples, function(x, y) {
-	  command <- (
-	    if (compare != TRUE) {
-	    print_message("bamCoverage selected based on inputs")
-	    str_c("bamCoverage",
-	          "-b", x,
-	          "-of", "bigwig",
-	          "-bs", bin_size,
-	          "-o", str_c(outdir, (SCAR_obj@sample_sheet[, .(sample_name)]), 
-	                      ".bw", sep = ""),
-	          "-p", pull_setting(SCAR_obj, "ncores"),
-	          sep = " ")
-	  }
+	  if (compare == FALSE) {
+	    command <- (str_c(
+	    "bamCoverage",
+	    "-b", x,
+	    "-of", "bigwig",
+	    "-bs", bin_size,
+	    "-o", str_c(outdir, (SCAR_obj@sample_sheet[, .(sample_name)]), 
+	                ".bw", sep = ""),
+	    "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
+	  )}
+	    
 	  else {
-	    print_message("bamCompare selected based on inputs")
-	    str_c("bamCompare",
-	          "-b1", x,
-	          "-b2", y,
-	          "--operation", comp_op,
-	          "-bs", bin_size,
-	          "-o", str_c(outdir, (SCAR_obj@sample_sheet[
-	              , .(sample_name)]), "_", comp_op, "_control.bw", sep = ""),
-	          "-p", pull_setting(SCAR_obj, "ncores"),
-	          sep = " ")
-	  })
+	    command <- str_c(
+	    "bamCompare",
+	    "-b1", x,
+	    "-b2", y,
+	    "--operation", comp_op,
+	    "-bs", bin_size,
+	    "-o", str_c(outdir, (SCAR_obj@sample_sheet[
+	    , .(sample_name)]), "_", comp_op, "_control.bw", sep = ""),
+	          "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
+	    }
 	
     
 	if (compare) {
