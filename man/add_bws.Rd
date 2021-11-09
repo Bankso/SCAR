@@ -4,7 +4,7 @@
 \alias{add_bws}
 \title{Add bigwigs to Sample Sheet}
 \usage{
-add_bws(SCAR_obj, alignment_dir = alignment_dir, comp_op = comp_op)
+add_bws(SCAR_obj, alignment_dir, comp_op = "log2")
 }
 \arguments{
 \item{SCAR_obj}{SCAR object.}

@@ -7,7 +7,7 @@ fastqc_reports/
 bigwigs/
 peaks/
 *.Rproj
-tests/
+test/
 *.Rhistory
 *.RData
 *.Rbuildignore
