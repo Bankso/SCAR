@@ -28,32 +28,29 @@ conda update -n SCAR_env -y -c conda-forge -c bioconda -c defaults --all
 
 conda clean -y --all
 
-## Install SCAR_env.
+## Activate SCAR_env.
 
-export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
+conda activate SCAR_env
 
 ## Get compression tools for linux
 
 apt-get -y update
 apt-get -y install build-essential zlib1g-dev
 
-## Set unpack target, extract necessary packages, install SCAR package
+## Set unpack target, extract necessary packages, install SCAR
 
 R --slave -e "Sys.setenv(TAR='/bin/tar'); \
 BiocManager::install(ask = FALSE); \
 devtools::install_github('Bankso/SCAR', ref='main')"
 
-## install updated version of enaDataGet and SEACR.
+## install SEACR.
 
-git clone https://github.com/rpolicastro/enaBrowserTools.git
 git clone https://github.com/FredHutch/SEACR
 
 ## add bind point for working directory
 
-chmod -R a+rx /opt/conda
 mkdir /opt/conda/process
 
 %environment
 
-export PATH=/enaBrowserTools/python3/:/opt/conda/envs/SCAR_env/bin/:$PATH
 export PATH=/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH

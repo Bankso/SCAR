@@ -32,12 +32,9 @@ bowtie2_index <- function(
   system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   ## Store the genome directory.
-  SCAR_obj <- set_settings(
-    SCAR_obj,
-    genome_dir = str_c(outdir, index_name),
-    genome_assembly = genome_assembly
-  )
-
+  SCAR_obj <- set_settings(SCAR_obj, genome_dir = str_c(outdir, index_name), genome_assembly = genome_assembly)
+  print_message("Index location stored in settings.")
+  
   ## Return the SCAR object.
   return(SCAR_obj)
 

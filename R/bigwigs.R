@@ -72,7 +72,7 @@ make_bigwigs <- function(
   ## Prepare command.
   commands <- iwalk(samples, function(x, y) {
 	  if (compare == FALSE) {
-	    command <- (str_c(
+	    command <- str_c(
 	    "bamCoverage",
 	    "-b", x,
 	    "-of", "bigwig",
@@ -80,7 +80,7 @@ make_bigwigs <- function(
 	    "-o", str_c(outdir, (SCAR_obj@sample_sheet[, .(sample_name)]), 
 	                ".bw", sep = ""),
 	    "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
-	  )}
+		}
 	    
 	  else {
 	    command <- str_c(
@@ -89,8 +89,8 @@ make_bigwigs <- function(
 	    "-b2", y,
 	    "--operation", comp_op,
 	    "-bs", bin_size,
-	    "-o", str_c(outdir, (SCAR_obj@sample_sheet[
-	    , .(sample_name)]), "_", comp_op, "_control.bw", sep = ""),
+	    "-o", str_c(outdir, SCAR_obj@sample_sheet[
+	    , .(sample_name)], "_", comp_op, "_control.bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
 	    }
 	
