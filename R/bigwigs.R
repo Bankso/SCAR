@@ -44,7 +44,11 @@ make_bigwigs <- function(
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
   compare <- as.logical(pull_setting(SCAR_obj, "compare"))
-
+  
+  ## Set temporary directory.
+  if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE)
+  Sys.setenv(TMPDIR=temp_dir)
+  
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
@@ -70,21 +74,9 @@ make_bigwigs <- function(
     }
 
   ## Prepare command.
-  commands <- iwalk(samples, function(x, y) {
-	  if (compare == FALSE) {
+  if (compare == TRUE){
+  iwalk(samples, function(x, y) {
 	    command <- str_c(
-	    "bamCoverage",
-	    "-b", x,
-	    "-of", "bigwig",
-	    "-bs", bin_size,
-	    "-o", str_c(outdir, (SCAR_obj@sample_sheet[, .(sample_name)]), 
-	                ".bw", sep = ""),
-	    "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
-		}
-	    
-	  else {
-	    command <- str_c(
-	    "bamCompare",
 	    "-b1", x,
 	    "-b2", y,
 	    "--operation", comp_op,
@@ -92,8 +84,6 @@ make_bigwigs <- function(
 	    "-o", str_c(outdir, SCAR_obj@sample_sheet[
 	    , .(sample_name)], "_", comp_op, "_control.bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
-	    }
-	
     
 	if (compare) {
       command <- str_c(
@@ -135,16 +125,11 @@ make_bigwigs <- function(
       command <- str_c(command, "-e", extend_reads, sep = " ")
     }
 
-    return(command)
-  })
-  
-  ## Set temporary directory.
-  if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE)
-  Sys.setenv(TMPDIR=temp_dir)
-
-  ## Run commands.
-  print_message("Creating the BIGWIG coverage tracks.")
-  walk(commands, system)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
+	  print_message("Creating the BIGWIG coverage tracks.")
+	  system2("bamCompare", args=command, stderr = str_c(outdir, y, "_log.txt"))		
+	  }
+  )
+	}
 
   ## Add settings to SCAR object.
   print_message("Assigning alignment dir to outdir")

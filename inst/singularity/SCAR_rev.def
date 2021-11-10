@@ -9,12 +9,17 @@ From: continuumio/miniconda3
 
 ## Update conda.
 
-conda update -n base -y -c defaults conda
+conda update -n base -y -c conda-forge -c bioconda -c defaults --all
 
 ## Install required software.
 
-conda create -n SCAR_env -y -c conda-forge -c bioconda -c defaults \
-r-base r-devtools r-tidyverse r-data.table r-stringr r-ggpubr r-biocmanager \
+conda create -n SCAR_env -y -c conda-forge -c bioconda -c defaults python=3.9 \
+r-base=4.1
+
+export PATH=/opt/conda/envs/SCAR_env/bin/:$PATH
+
+conda install -n SCAR_env -y -c conda-forge -c bioconda -c defaults \
+r-devtools r-tidyverse r-data.table r-stringr r-ggpubr r-biocmanager \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
 fastqc star samtools bowtie2 deeptools bedtools homer \
@@ -24,13 +29,7 @@ parallel requests
 
 conda update -n SCAR_env -y -c conda-forge -c bioconda -c defaults --all
 
-## Clean up extra files.
-
 conda clean -y --all
-
-## Activate SCAR_env.
-
-conda activate SCAR_env
 
 ## Get compression tools for linux
 
@@ -39,7 +38,7 @@ apt-get -y install build-essential zlib1g-dev
 
 ## Set unpack target, extract necessary packages, install SCAR
 
-R --slave -e "Sys.setenv(TAR='/bin/tar'); \
+R --slave -e "Sys.setenv(TAR='bin/tar'); \
 BiocManager::install(ask = FALSE); \
 devtools::install_github('Bankso/SCAR', ref='main')"
 
@@ -53,4 +52,4 @@ mkdir /opt/conda/process
 
 %environment
 
-export PATH=/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH
+export PATH=/SEACR/:$PATH
