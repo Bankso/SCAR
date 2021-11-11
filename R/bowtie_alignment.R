@@ -91,7 +91,9 @@ bowtie2_align <- function(
       controls <- map(controls, as.character)
       samples <- c(samples, controls)
     }
-  } else {
+  } 
+  
+  else {
     samples <- split(
       SCAR_obj@sample_sheet[, .(sample_name, file_1)],
       by = "sample_name",
@@ -112,7 +114,7 @@ bowtie2_align <- function(
       samples <- c(samples, controls)
     }
   }
-
+  
   ## Prepare bowtie2 alignment command.
   
   print_message("Aligning the FASTQ reads to the genome using Bowtie2")

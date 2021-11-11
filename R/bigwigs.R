@@ -1,5 +1,6 @@
 
 #' Generate Bigwigs
+#' @importFrom purrr map walk pwalk
 #'
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
@@ -53,36 +54,24 @@ make_bigwigs <- function(
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   ## Get bams.
-    samples <- split(
-      SCAR_obj@sample_sheet[, .(sample_name, sample_bams)],
-      by = "sample_name",
-      keep.by = FALSE
-      )
-    samples <- map(samples, as.character)
-
-    if(any(!is.na(SCAR_obj@sample_sheet[["control_bams"]]))) {
-      controls <- split(
-        unique(SCAR_obj@sample_sheet[
-          !is.na(control_bams),
-          .(control_name, control_bams)
-        ]),
-        by = "control_name",
-        keep.by = FALSE
-      )
-      controls <- map(controls, as.character)
-      samples <- c(samples, controls)
-    }
+  samples <- split(
+  	SCAR_obj@sample_sheet[, .(sample_name, sample_bams, control_bams)],
+  	by = "sample_name",
+  	keep.by = FALSE
+  	)
+   samples <- map(samples, as.character)
+  
 
   ## Prepare command.
   if (compare == TRUE){
   iwalk(samples, function(x, y) {
 	    command <- str_c(
-	    "-b1", x,
-	    "-b2", y,
+	    "-b1", x[1],
+	    "-b2", x[2],
 	    "--operation", comp_op,
 	    "-bs", bin_size,
-	    "-o", str_c(outdir, SCAR_obj@sample_sheet[
-	    , .(sample_name)], "_", comp_op, "_control.bw", sep = ""),
+	    "-o", str_c(
+	    	outdir, y, "_", comp_op, "_control.bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
     
 	if (compare) {
@@ -125,8 +114,8 @@ make_bigwigs <- function(
       command <- str_c(command, "-e", extend_reads, sep = " ")
     }
 
-	  print_message("Creating the BIGWIG coverage tracks.")
-	  system2("bamCompare", args=command, stderr = str_c(outdir, y, "_log.txt"))		
+	  print(command)
+	  system2("bamCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))		
 	  }
   )
 	}
