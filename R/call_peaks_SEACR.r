@@ -19,93 +19,76 @@ call_peaks_SEACR <- function(
   norm = TRUE,
   stringent = TRUE,
   sep = ""
-  ) 
+  )
 {
-
-  ## Input checks.
-  paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
 
   ## Make sure the output directory exists.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
   ## Get your bgs
   samples <- split(
-      SCAR_obj@sample_sheet[, .(sample_name, sample_bgs)],
-      by = "sample_name",
-      keep.by = FALSE
-    )
-    samples <- map(samples, as.character)
+  	SCAR_obj@sample_sheet[, .(sample_name, sample_bgs, control_bgs)],
+  	by = "sample_name",
+  	keep.by = FALSE
+  )
+  samples <- map(samples, as.character)
 
-    if (any(!is.na(SCAR_obj@sample_sheet[["control_bgs"]]))) {
-      controls <- split(
-        unique(SCAR_obj@sample_sheet[
-          !is.na(control_bgs),
-          .(control_name, control_bgs)
-        ]),
-        by = "control_name",
-        keep.by = FALSE
-      )
-      controls <- map(controls, as.character)
-      
-	  samples <- c(samples, controls)
-    }
-  
+
   ## Create the peak calling command.
-  
+
   commands <- imap(samples, function(x, y) {
-	command <- str_c(
-		'bash', 
-		'SEACR_1.3.sh',
-		str_c(
-		  pull_setting(SCAR_obj, "alignment_dir"),
-		  str_c(x, ".bedgraph")),
-		str_c(
-		  pull_setting(SCAR_obj, "alignment_dir"),
-		  str_c(y, ".bedgraph")),
-		num_thresh,
-		sep = " "
+		command <- str_c(
+			'bash',
+			'SEACR_1.3.sh',
+			x[1],
+			x[2],
+			num_thresh,
+			sep = " "
     )
 
     if (norm) {
 		command <- str_c(
-		command, 'norm', sep = " "
-		)
-    } 
-    
-    else { 
-		command <- str_c(
-		command, 'non', sep = " "
-		)
+			command, 'norm', sep = " "
+			)
     }
-    
+
+    else {
+		command <- str_c(
+			command, 'non', sep = " "
+			)
+    }
+
     if (stringent) {
 		command <- str_c(
-		command, 'stringent', sep = " "
-		)
+			command, 'stringent', sep = " "
+			)
     }
 	  else {
 		command <- str_c(
-		command, 'relaxed', sep = " " 
-		)
+			command, 'relaxed', sep = " "
+			)
     }
-    
+
 	  command <- str_c(
-	  command, str_c(outdir, x), sep = " " 
+	  	command, str_c(outdir, y, "_peaks.bed"), sep = " "
 	  )
-    return(command)
+    print(command)
+	  return(command)
 	}
   )
 
   ## Run the commands.
   print_message("Calling peaks from the aligned reads.")
-  walk(commands, system)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
+  walk(commands, system2(
+  	"bash", args=commands, stderr=str_c(outdir, "peaks", "_log.txt"))
+  	)
 
   ## Save the peak directory.
   SCAR_obj <- set_settings(SCAR_obj, peak_dir = outdir)
-  
+
   ## Add new BEDs to peak_dir
   SCAR_obj <- add_beds(SCAR_obj, peak_dir = outdir)
-  
+
   ## Return the SCAR object.
   return(SCAR_obj)
 }

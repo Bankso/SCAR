@@ -13,14 +13,14 @@
 #' @param max_fragment Maximum fragment length.
 #' @param extend_reads Distance to extend single-end reads.
 #'   Set to NA to not extend reads.
-#' @param scale_factors Takes a named vector, with the name being the 
+#' @param scale_factors Takes a named vector, with the name being the
 #'   sample name, and the value being the scale factor.
 #'   If set will override 'normalize_using' option.
 #' @param split_strands For RNA-seq, whether to split the strands into
 #'   positive and minus strand files.
 #' @param library_type If split_strands is TRUE, specify library chemistry
 #'   as either 'dUTP' or 'ligation'.
-#' @param temp_dir Temporary directory to write files to.  
+#' @param temp_dir Temporary directory to write files to.
 #'
 #' @export
 
@@ -45,11 +45,11 @@ make_bigwigs <- function(
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
   compare <- as.logical(pull_setting(SCAR_obj, "compare"))
-  
+
   ## Set temporary directory.
   if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE)
   Sys.setenv(TMPDIR=temp_dir)
-  
+
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
@@ -60,7 +60,7 @@ make_bigwigs <- function(
   	keep.by = FALSE
   	)
    samples <- map(samples, as.character)
-  
+
 
   ## Prepare command.
   if (compare == TRUE){
@@ -73,12 +73,12 @@ make_bigwigs <- function(
 	    "-o", str_c(
 	    	outdir, y, "_", comp_op, "_control.bw", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
-    
+
 	if (compare) {
       command <- str_c(
         command, "--scaleFactorsMethod", "None", sep = " ")
     }
-	
+
 	if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
       command <- str_c(
         command, "--normalizeUsing", normalize_using, sep = " ")
@@ -114,8 +114,8 @@ make_bigwigs <- function(
       command <- str_c(command, "-e", extend_reads, sep = " ")
     }
 
-	  print(command)
-	  system2("bamCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))		
+	  print_message("Deeptools - building comparison tracks from aligned reads")
+	  system2("bamCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))
 	  }
   )
 	}
@@ -123,11 +123,11 @@ make_bigwigs <- function(
   ## Add settings to SCAR object.
   print_message("Assigning alignment dir to outdir")
   SCAR_obj <- set_settings(SCAR_obj, alignment_dir = outdir)
-  
+
   ## Add bw files to sample_sheet.
   print_message("Assigning bws to sample sheet")
   SCAR_obj <- add_bws(SCAR_obj, alignment_dir = outdir)
-  
+
   ## Return SCAR object.
   return(SCAR_obj)
 

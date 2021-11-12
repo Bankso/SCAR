@@ -48,8 +48,6 @@ devtools::install_github('Bankso/SCAR', ref='main')"
 
 git clone https://github.com/FredHutch/SEACR
 
-## add bind point for working directory
-
 mkdir /opt/conda/process
 
 %environment
