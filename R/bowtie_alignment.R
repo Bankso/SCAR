@@ -34,7 +34,7 @@ bowtie2_index <- function(
   ## Store the genome directory.
   SCAR_obj <- set_settings(SCAR_obj, genome_dir = str_c(outdir, index_name), genome_assembly = genome_assembly)
   print_message("Index location stored in settings.")
-  
+
   ## Return the SCAR object.
   return(SCAR_obj)
 
@@ -50,7 +50,7 @@ bowtie2_index <- function(
 #' @param min_fragment Minimum fragment length (paired end).
 #' @param max_fragment Maximum fragment length (paired end).
 #' @param mapq_val Minimum MAPQ value to accept reads. Used to filter via
-#'                 samtools post alignment 
+#'                 samtools post alignment
 #' @param max_memory Maximum memory per thread for samtools.
 #'
 #' @export
@@ -91,8 +91,8 @@ bowtie2_align <- function(
       controls <- map(controls, as.character)
       samples <- c(samples, controls)
     }
-  } 
-  
+  }
+
   else {
     samples <- split(
       SCAR_obj@sample_sheet[, .(sample_name, file_1)],
@@ -114,9 +114,9 @@ bowtie2_align <- function(
       samples <- c(samples, controls)
     }
   }
-  
+
   ## Prepare bowtie2 alignment command.
-  
+
   print_message("Aligning the FASTQ reads to the genome using Bowtie2")
   iwalk(samples, function(x, y) {
     command <- str_c(
@@ -166,24 +166,24 @@ bowtie2_align <- function(
       "-O", "BAM",
       str_c(outdir, str_c(x, ".sam")),
       sep = " "
-    )
-    system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    	)
+    	system(command)
 
     command <- str_c(
       "samtools", "view", "-q", mapq_val,
-      "-b", 
+      "-b",
       str_c(outdir, str_c(x, ".bam")),
       ">", str_c(outdir, str_c(x, "_sorted.bam")),
       sep = " "
-    )
-    system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
-    
+  		)
+    	system(command)
+
     command <- str_c(
       "samtools", "index",
       str_c(outdir, str_c(x, "_sorted.bam")),
       sep = " "
-    )
-    system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    	)
+    	system(command)
   })
 
   ## Add settings to SCAR object.

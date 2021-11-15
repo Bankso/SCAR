@@ -22,6 +22,7 @@ make_bgs <- function(
 {
   ## Input checks.
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
+  genome_file <- pull_setting(SCAR_obj, "genome_assembly")
 
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
@@ -43,28 +44,63 @@ make_bgs <- function(
   	controls <- map(controls, as.character)
   	samples <- c(samples, controls)
 
-  ## Prepare command.
+  ## Conversion of bams to bedgraphs
   iwalk(samples, function(x, y) {
+
+  	## Step 1: convert bam to bed
+  	command <- str_c(
+  		"bamtobed",
+  		"-bedpe",
+  		"-i",
+  		x,
+  		">", str_c(outdir, str_c(y, ".bed")),
+  		sep = " "
+  		)
+  	system2("bedtools", args=command, stderr=str_c(outdir, y, "_log.txt"))
+
+
+  	## Step 2: remove extra info from bed file
+  	command <- str_c(
+  		"'$1==$4 && $6-$2 < 1000 {print $0}'",
+  		str_c(outdir, str_c(y, ".bed")),
+  		">", str_c(outdir, str_c(y, ".clean.bed")),
+  		sep = " "
+  		)
+  	system2("awk", args=command, stderr=str_c(outdir, y, "_log.txt"))
+
+
+  	## Step 3: convert to fragments
+  	command <- str_c(
+  		"cut",
+  		"-f",
+  		"1,2,6",
+  		str_c(outdir, str_c(y, ".clean.bed")),
+  		"|",
+  		"sort",
+  		"-k1,1",
+  		"-k2,2n",
+  		"-k3,3n",
+  		">", str_c(outdir, str_c(y, ".fragments.bed")),
+  		sep = " "
+  		)
+  	system(command)
+
+
+  	## Step 4: convert to bedgraph via bedtools
   	command <- str_c(
   		"genomecov",
-			"-ibam",
-			x,
 			"-bg",
+			"-i",
+			str_c(outdir, str_c(y, ".fragments.bed")),
+			"-g",
+			genome_file,
+			">", str_c(outdir, str_c(y, ".fragments.bedgraph")),
     	sep = " "
     	)
 
-		if ((paired_status) && (pair_lr)) {
-      command <- str_c(command, "-pc", sep = " ")
-    	}
-
-		if ((paired_status) && (frag_size)) {
-      command <- str_c(command, "-fs", sep = " ")
-			}
-		print(command)
 		print_message("bedtools - converting bams to bedgraphs for SEACR")
 		system2("bedtools", args=command, stderr=str_c(outdir, y, "_log.txt"))
-  	}
-	)
+  })
 
 	## Add settings to SCAR object.
   print_message("Assigning alignment dir to outdir")

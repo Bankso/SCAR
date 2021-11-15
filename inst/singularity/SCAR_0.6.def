@@ -14,13 +14,13 @@ conda update -n base -y -c conda-forge -c bioconda -c defaults --all
 ## Install required software.
 
 conda create -n SCAR_env -y -c conda-forge -c bioconda -c defaults python=3.9 \
-r-base=4.1
+r-base=4.1 wget r-essentials
 
 conda install -n SCAR_env -y -c conda-forge -c bioconda -c defaults \
 r-devtools r-tidyverse r-data.table r-stringr r-ggpubr r-biocmanager \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
-fastqc star samtools bowtie2 deeptools bedtools homer \
+fastqc star samtools bowtie2 deeptools bedtools \
 parallel requests
 
 ## Update environment.
@@ -46,13 +46,20 @@ devtools::install_github('Bankso/SCAR', ref='main')"
 
 ## install SEACR.
 
-git clone https://github.com/FredHutch/SEACR
+git clone https://github.com/FredHutch/SEACR /opt/conda/envs/SCAR_env
+
+## install HOMER.
+
+mkdir /opt/conda/envs/SCAR_env/homer
+wget http://homer.ucsd.edu/homer/configureHomer.pl -O /opt/conda/envs/SCAR_env/homer
+perl /opt/conda/envs/SCAR_env/homer/configureHomer.pl -install homer yeast-o yeast-p sacCer3
+
+## Directory bind point
 
 mkdir /opt/conda/process
 
 %environment
 
 . /opt/conda/etc/profile.d/conda.sh
-bash .bashrc
 conda activate SCAR_env
-export PATH=/SEACR/:/opt/conda/envs/SCAR_env/bin/:$PATH
+export PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH

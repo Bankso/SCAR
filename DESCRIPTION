@@ -1,7 +1,7 @@
 Package: SCAR
 Type: Package
 Title: SpLiT-ChEC analysis with R
-Version: 0.5
+Version: 0.6
 Authors@R: person("Orion", "Banks", role = c("aut", "cre"),
                email = "obanks@uoregon.edu")
 Maintainer: Orion Banks <obanks@uoregon.edu>

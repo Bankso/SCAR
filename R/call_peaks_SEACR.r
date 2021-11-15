@@ -38,7 +38,6 @@ call_peaks_SEACR <- function(
 
   commands <- imap(samples, function(x, y) {
 		command <- str_c(
-			'bash',
 			'SEACR_1.3.sh',
 			x[1],
 			x[2],
@@ -68,26 +67,20 @@ call_peaks_SEACR <- function(
 			command, 'relaxed', sep = " "
 			)
     }
-
-	  command <- str_c(
-	  	command, str_c(outdir, y, "_peaks.bed"), sep = " "
-	  )
-    print(command)
-	  return(command)
 	}
   )
 
   ## Run the commands.
   print_message("Calling peaks from the aligned reads.")
   walk(commands, system2(
-  	"bash", args=commands, stderr=str_c(outdir, "peaks", "_log.txt"))
+  	"bash", args=commands, stderr=str_c(outdir, "SEACR_log.txt"))
   	)
 
   ## Save the peak directory.
-  SCAR_obj <- set_settings(SCAR_obj, peak_dir = outdir)
+  SCAR_obj <- set_settings(SCAR_obj, peak_dir=outdir)
 
   ## Add new BEDs to peak_dir
-  SCAR_obj <- add_beds(SCAR_obj, peak_dir = outdir)
+  SCAR_obj <- add_beds(SCAR_obj, peak_dir=outdir, stringent=stringent)
 
   ## Return the SCAR object.
   return(SCAR_obj)
