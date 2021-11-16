@@ -8,8 +8,7 @@
 #'   Either TRUE or FALSE.
 #' @param ncores The number of cores/threads to use.
 #' @param genome_dir The directory of the genome index.
-#' @param genome_annotation The directory and file name of the
-#'   the genome index GTF file.
+#' @param genome_index The location of the bowtie2 genome index
 #' @param genome_assembly The directory and file name of the
 #'   the gnome assembly FASTA file.
 #' @param alignment_dir The directory containing the aligned reads.
@@ -24,7 +23,7 @@ set_settings <- function(
   paired = NA,
   ncores = NA,
   genome_dir = NA,
-  genome_annotation = NA,
+  genome_index = NA,
   genome_assembly = NA,
   alignment_dir = NA,
   peak_dir = NA,
@@ -49,8 +48,8 @@ set_settings <- function(
     settings[parameter == "genome_dir", value := genome_dir]
   }
 
-  if (!is.na(genome_annotation)) {
-    settings[parameter == "genome_annotation", value := genome_annotation]
+  if (!is.na(genome_index)) {
+    settings[parameter == "genome_index", value := genome_index]
   }
 
   if (!is.na(genome_assembly)) {
@@ -68,7 +67,7 @@ set_settings <- function(
   if (!is.na(compare)) {
     settings[parameter == "compare", value := compare]
   }
-  
+
   SCAR_obj@settings <- settings
   return(SCAR_obj)
 }

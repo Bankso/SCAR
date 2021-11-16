@@ -4,7 +4,13 @@
 \alias{make_bgs}
 \title{Make bedgraphs}
 \usage{
-make_bgs(SCAR_obj, outdir = getwd(), pair_lr = FALSE, frag_size = FALSE)
+make_bgs(
+  SCAR_obj,
+  outdir = getwd(),
+  pair_lr = FALSE,
+  frag_size = FALSE,
+  chrom_file = chrom_file
+)
 }
 \arguments{
 \item{SCAR_obj}{SCAR object.}
@@ -16,6 +22,8 @@ frags covering each bp (paired)}
 
 \item{frag_size}{Use stated fragment size from pairs instead
 of read length (paired)}
+
+\item{chrom_file}{bedtools genome file path}
 }
 \description{
 Make bedgraphs

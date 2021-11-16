@@ -14,13 +14,13 @@ License: GPL (>=2)
 Encoding: UTF-8
 LazyData: TRUE
 Imports:
-    methods,
-    stringr,
-    data.table,
-    purrr,
-    ChIPseeker,
-    GenomicFeatures,
-    rtracklayer,
+    methods ,
+    stringr ,
+    data.table ,
+    purrr ,
+    ChIPseeker ,
+    GenomicFeatures ,
+    rtracklayer ,
     Rsamtools 
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

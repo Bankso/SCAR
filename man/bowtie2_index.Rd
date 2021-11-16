@@ -16,7 +16,7 @@ bowtie2_index(
 
 \item{genome_assembly}{Path to genome fasta file.}
 
-\item{outdir}{Output directory for STAR genome index.}
+\item{outdir}{Output directory for genome index.}
 
 \item{index_name}{The naming structure given to the index.}
 }

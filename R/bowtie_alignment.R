@@ -2,7 +2,7 @@
 #' Bowtie2 Index Generation
 #'
 #' @param SCAR_obj SCAR object.
-#' @param outdir Output directory for STAR genome index.
+#' @param outdir Output directory for genome index.
 #' @param genome_assembly Path to genome fasta file.
 #' @param index_name The naming structure given to the index.
 #'
@@ -32,7 +32,13 @@ bowtie2_index <- function(
   system(command)#, ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   ## Store the genome directory.
-  SCAR_obj <- set_settings(SCAR_obj, genome_dir = str_c(outdir, index_name), genome_assembly = genome_assembly)
+  SCAR_obj <- set_settings(
+  	SCAR_obj,
+  	genome_dir = outdir,
+  	genome_index = str_c(outdir, index_name),
+  	genome_assembly = genome_assembly
+  	)
+
   print_message("Index location stored in settings.")
 
   ## Return the SCAR object.
@@ -120,7 +126,7 @@ bowtie2_align <- function(
   print_message("Aligning the FASTQ reads to the genome using Bowtie2")
   iwalk(samples, function(x, y) {
     command <- str_c(
-      "-x", pull_setting(SCAR_obj, "genome_dir"),
+      "-x", pull_setting(SCAR_obj, "genome_index"),
       "-S", str_c(outdir, y, ".sam"),
       "--phred33",
       "--no-unal",

@@ -1,7 +1,7 @@
 
 #' SCAR Class
 #'
-#' @import data.table
+#' @importFrom data.table data.table
 #' @import stringr
 #' @slot sample_sheet Sample sheet.
 #' @slot settings Various run settings.
@@ -61,13 +61,13 @@ SCAR_maker <- function(
         ifelse(str_detect(control_name, "(^$|^NA$)"), NA_character_, control_name)
       )
     ]
-    
+
 
   ## prepare run settings.
   run_settings <- data.table(
      parameter = c(
        "analysis_type", "paired", "ncores", "genome_dir",
-       "genome_annotation", "genome_assembly", "alignment_dir",
+       "genome_index", "genome_assembly", "alignment_dir",
        "peak_dir", "compare"
     ),
      value = c(analysis_type, paired, ncores, rep("", 5), compare)

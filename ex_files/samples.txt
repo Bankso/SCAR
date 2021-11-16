@@ -1,2 +1,0 @@
-sample_name	file_1	file_2	control_name	control_file_1	control_file_2
-Med14_30s	OB9_S25_R1_001.fastq.gz	OB9_S25_R2_001.fastq.gz

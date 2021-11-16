@@ -10,6 +10,7 @@
 #'        frags covering each bp (paired)
 #' @param frag_size Use stated fragment size from pairs instead
 #'        of read length (paired)
+#' @param chrom_file bedtools genome file path
 #'
 #' @export
 
@@ -17,12 +18,12 @@ make_bgs <- function(
   SCAR_obj,
   outdir = getwd(),
   pair_lr = FALSE,
-  frag_size = FALSE
+  frag_size = FALSE,
+  chrom_file = chrom_file
 	)
 {
   ## Input checks.
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
-  genome_file <- pull_setting(SCAR_obj, "genome_assembly")
 
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
@@ -93,7 +94,7 @@ make_bgs <- function(
 			"-i",
 			str_c(outdir, str_c(y, ".fragments.bed")),
 			"-g",
-			genome_file,
+			chrom_file,
 			">", str_c(outdir, str_c(y, ".fragments.bedgraph")),
     	sep = " "
     	)

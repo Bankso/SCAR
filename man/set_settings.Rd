@@ -10,7 +10,7 @@ set_settings(
   paired = NA,
   ncores = NA,
   genome_dir = NA,
-  genome_annotation = NA,
+  genome_index = NA,
   genome_assembly = NA,
   alignment_dir = NA,
   peak_dir = NA,
@@ -30,8 +30,7 @@ Either TRUE or FALSE.}
 
 \item{genome_dir}{The directory of the genome index.}
 
-\item{genome_annotation}{The directory and file name of the
-the genome index GTF file.}
+\item{genome_index}{The location of the bowtie2 genome index}
 
 \item{genome_assembly}{The directory and file name of the
 the gnome assembly FASTA file.}
