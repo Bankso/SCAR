@@ -7,9 +7,9 @@
 call_peaks_SEACR(
   SCAR_obj,
   outdir = getwd(),
-  num_thresh = 0.05,
-  norm = TRUE,
-  stringent = TRUE,
+  num_thresh = NA,
+  norm = NA,
+  stringent = NA,
   sep = ""
 )
 }
@@ -20,7 +20,7 @@ call_peaks_SEACR(
 
 \item{num_thresh}{P-value thresholding for peaks.}
 
-\item{norm}{TRUE or FALSE - normalization on/off}
+\item{norm}{TRUE or FALSE - inputs are normalized or not}
 
 \item{stringent}{TRUE or FALSE - stringent or relaxed analysis}
 
