@@ -6,7 +6,7 @@
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory for peak files.
 #' @param num_thresh P-value thresholding for peaks.
-#' @param norm TRUE or FALSE - normalization on/off
+#' @param norm TRUE or FALSE - inputs are normalized or not
 #' @param stringent TRUE or FALSE - stringent or relaxed analysis
 #' @param sep separator for entries, default here is ""
 #'
@@ -15,9 +15,9 @@
 call_peaks_SEACR <- function(
   SCAR_obj,
   outdir = getwd(),
-  num_thresh = 0.05,
-  norm = TRUE,
-  stringent = TRUE,
+  num_thresh = NA,
+  norm = NA,
+  stringent = NA,
   sep = ""
   )
 {
@@ -41,9 +41,14 @@ call_peaks_SEACR <- function(
 			'SEACR_1.3.sh',
 			x[1],
 			x[2],
-			num_thresh,
 			sep = " "
     )
+	
+	if (!is.na(num_thresh) && is.na(x[2])) {
+		command <- str_c(
+			command, num_thresh, sep = " "
+			)
+    }
 
     if (norm) {
 		command <- str_c(
