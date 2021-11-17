@@ -55,7 +55,8 @@ mkdir /opt/conda/envs/SCAR_env/homer/
 wget http://homer.ucsd.edu/homer/configureHomer.pl -P /opt/conda/envs/SCAR_env/homer/
 perl /opt/conda/envs/SCAR_env/homer/configureHomer.pl -install homer yeast-o yeast-p sacCer3
 
-## Get script to build genome file for -g in bedtools
+## Get script to acquire genome files for bedtools
+
 wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/fetchChromSizes -P /opt/conda/envs/SCAR_env/bin/
 
 ## Bind point for data home directory
@@ -64,7 +65,4 @@ mkdir /opt/conda/process
 
 %environment
 
-. /opt/conda/etc/profile.d/conda.sh
-conda activate SCAR_env
 export PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH
-bash fetchChromSizes sacCer3 > /opt/conda/process/genome/yeast_chr_size.txt  
