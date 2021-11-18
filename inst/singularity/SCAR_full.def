@@ -66,6 +66,10 @@ mkdir /opt/conda/process
 %environment
 
 . /opt/conda/etc/profile.d/conda.sh
-bash
+echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+conda activate
+echo "conda activate" >> ~/.bashrc
 conda activate SCAR_env
+echo "conda activate SCAR_env" >> ~/.bashrc
 export PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH
+echo "PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH" >> ~/.bashrc
