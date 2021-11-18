@@ -26,9 +26,9 @@ add_beds <- function(
   sample_sheet[,
     sample_beds := str_c(peak_dir, sample_name, level, ".bed")]
 
-  ## Add new sample sheet back to zent object.
+  ## Add new sample sheet back to SCAR object.
   SCAR_obj@sample_sheet <- sample_sheet
 
-  ## Return the zent object.
+  ## Return the SCAR object.
   return(SCAR_obj)
 }

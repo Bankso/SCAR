@@ -37,41 +37,44 @@ call_peaks_SEACR <- function(
   ## Create the peak calling command.
 
   commands <- imap(samples, function(x, y) {
-		command <- str_c(
-			'SEACR_1.3.sh',
-			x[1],
-			x[2],
-			sep = " "
-    )
-	
+	command <- str_c(
+		'SEACR_1.3.sh',
+		x[1],
+		x[2],
+		sep = " "
+		)
+
 	if (!is.na(num_thresh) && is.na(x[2])) {
 		command <- str_c(
 			command, num_thresh, sep = " "
 			)
-    }
+		}
 
     if (norm) {
 		command <- str_c(
 			command, 'norm', sep = " "
 			)
-    }
+		}
 
     else {
 		command <- str_c(
 			command, 'non', sep = " "
 			)
-    }
+		}
 
     if (stringent) {
 		command <- str_c(
 			command, 'stringent', sep = " "
 			)
-    }
+		}
 	  else {
 		command <- str_c(
 			command, 'relaxed', sep = " "
 			)
-    }
+		}
+	command <- str_c(
+			command, str_c(outdir, y), sep = " "
+			)
 	}
   )
 
