@@ -65,4 +65,6 @@ mkdir /opt/conda/process
 
 %environment
 
+bash
+conda activate SCAR_env
 export PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH
