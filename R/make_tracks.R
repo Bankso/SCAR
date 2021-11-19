@@ -1,5 +1,5 @@
 
-#' Generate Bigwigs
+#' Generate coverage tracks
 #' @importFrom purrr map walk pwalk
 #'
 #' @param SCAR_obj SCAR object.
@@ -21,11 +21,12 @@
 #' @param library_type If split_strands is TRUE, specify library chemistry
 #'   as either 'dUTP' or 'ligation'.
 #' @param center_reads Should reads be centered based on fragment length? Helps with signal around enriched regions
+#' @param out_type Output file format, bedgraph or bigwig
 #' @param temp_dir Temporary directory to write files to.
 #'
 #' @export
 
-make_bigwigs <- function(
+make_tracks <- function(
   SCAR_obj,
   outdir = getwd(),
   comp_op = "log2",
@@ -40,6 +41,7 @@ make_bigwigs <- function(
   split_strands = NA,
   library_type = NA,
   center_reads = NA,
+  out_type = NA,
   temp_dir = "./temp"
 ) {
 
@@ -72,8 +74,9 @@ make_bigwigs <- function(
 	    "-b2", x[2],
 	    "--operation", comp_op,
 	    "-bs", bin_size,
+		"-of", out_type,
 	    "-o", str_c(
-	    	outdir, y, "_", comp_op, "_control.bw", sep = ""),
+	    	outdir, y, "_", comp_op, "_control.cov", sep = ""),
 	          "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
 
 	if (compare) {
@@ -100,12 +103,12 @@ make_bigwigs <- function(
       command <- str_c(
         command, "--skipNonCoveredRegions", sep = " ")
     }
-	
+
 	if (center_reads) {
       command <- str_c(
         command, "--centerReads", sep = " ")
     }
-	
+
     if (!is.na(min_fragment)) {
       command <- str_c(
         command, "--minFragmentLength", min_fragment, sep = " ")
@@ -133,7 +136,7 @@ make_bigwigs <- function(
 
   ## Add bw files to sample_sheet.
   print_message("Assigning bws to sample sheet")
-  SCAR_obj <- add_bws(SCAR_obj, alignment_dir = outdir)
+  SCAR_obj <- add_cov(SCAR_obj, alignment_dir = outdir)
 
   ## Return SCAR object.
   return(SCAR_obj)
