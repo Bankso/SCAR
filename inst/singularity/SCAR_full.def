@@ -72,4 +72,6 @@ echo "conda activate" >> ~/.bashrc
 conda activate SCAR_env
 echo "conda activate SCAR_env" >> ~/.bashrc
 export PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH
-echo "PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH" >> ~/.bashrc
+echo "export PATH=/opt/conda/envs/SCAR_env/SEACR/:/opt/conda/envs/SCAR_env/bin/:/opt/conda/envs/SCAR_env/homer/bin/:$PATH" >> ~/.bashrc
+cp /opt/conda/envs/SCAR_env/SEACR/SEACR_1.3.sh ./
+cp /opt/conda/envs/SCAR_env/SEACR/SEACR_1.3.R ./
