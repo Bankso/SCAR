@@ -11,13 +11,14 @@ make_bigwigs(
   bin_size = 1,
   normalize_using = NA,
   genome_size = NA,
-  skip_non_covered = TRUE,
+  skip_non_covered = NA,
   min_fragment = NA,
   max_fragment = NA,
   extend_reads = NA,
   scale_factors = NA,
   split_strands = NA,
   library_type = NA,
+  center_reads = NA,
   temp_dir = "./temp"
 )
 }
@@ -30,9 +31,9 @@ make_bigwigs(
 
 \item{bin_size}{Bin size for coverage summary.}
 
-\item{normalize_using}{Either 'CPM' or 'RPGC'.}
+\item{normalize_using}{Either 'CPM' or 'RPGC'/'RPKM'.}
 
-\item{genome_size}{Effective genome size, req'd for RPGC.}
+\item{genome_size}{Effective genome size, req'd for RPGC/RPKM.}
 
 \item{skip_non_covered}{Should regions without coverage be skipped.}
 
@@ -52,6 +53,8 @@ positive and minus strand files.}
 
 \item{library_type}{If split_strands is TRUE, specify library chemistry
 as either 'dUTP' or 'ligation'.}
+
+\item{center_reads}{Should reads be centered based on fragment length? Helps with signal around enriched regions}
 
 \item{temp_dir}{Temporary directory to write files to.}
 }

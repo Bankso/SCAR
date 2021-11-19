@@ -67,7 +67,7 @@ bowtie2_align <- function(
   alignment_mode = "end-to-end",
   min_fragment = NA,
   max_fragment = NA,
-  mapq_val = 20,
+  mapq_val = 10,
   max_memory = "1G"
 ) {
 

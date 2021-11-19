@@ -6,8 +6,8 @@
 #' @param outdir Output directory.
 #' @param comp_op Operation for bamCompare
 #' @param bin_size Bin size for coverage summary.
-#' @param normalize_using Either 'CPM' or 'RPGC'.
-#' @param genome_size Effective genome size, req'd for RPGC.
+#' @param normalize_using Either 'CPM' or 'RPGC'/'RPKM'.
+#' @param genome_size Effective genome size, req'd for RPGC/RPKM.
 #' @param skip_non_covered Should regions without coverage be skipped.
 #' @param min_fragment Minimum fragment length.
 #' @param max_fragment Maximum fragment length.
@@ -20,6 +20,7 @@
 #'   positive and minus strand files.
 #' @param library_type If split_strands is TRUE, specify library chemistry
 #'   as either 'dUTP' or 'ligation'.
+#' @param center_reads Should reads be centered based on fragment length? Helps with signal around enriched regions
 #' @param temp_dir Temporary directory to write files to.
 #'
 #' @export
@@ -31,13 +32,14 @@ make_bigwigs <- function(
   bin_size = 1,
   normalize_using = NA,
   genome_size = NA,
-  skip_non_covered = TRUE,
+  skip_non_covered = NA,
   min_fragment = NA,
   max_fragment = NA,
   extend_reads = NA,
   scale_factors = NA,
   split_strands = NA,
   library_type = NA,
+  center_reads = NA,
   temp_dir = "./temp"
 ) {
 
@@ -98,7 +100,12 @@ make_bigwigs <- function(
       command <- str_c(
         command, "--skipNonCoveredRegions", sep = " ")
     }
-
+	
+	if (center_reads) {
+      command <- str_c(
+        command, "--centerReads", sep = " ")
+    }
+	
     if (!is.na(min_fragment)) {
       command <- str_c(
         command, "--minFragmentLength", min_fragment, sep = " ")
@@ -116,9 +123,9 @@ make_bigwigs <- function(
 
 	  print_message("Deeptools - building comparison tracks from aligned reads")
 	  system2("bamCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))
-	  }
-  )
 	}
+  )
+}
 
   ## Add settings to SCAR object.
   print_message("Assigning alignment dir to outdir")
