@@ -5,6 +5,8 @@
 #'
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
+#' @param in_bam path to an input bam, leave blank if none
+#' @param in_bg path to an input bedgraph, leave blank if none
 #' @param bed_file A bed file of regions to be checked for local low signal sites in aligned bams
 #'
 #' @export
@@ -12,6 +14,8 @@
 pf_analysis <- function(
   SCAR_obj,
   outdir = getwd(),
+  in_bam = NA,
+  in_bg = NA,
   bed_file = bed_file
 	)
 {
@@ -19,56 +23,54 @@ pf_analysis <- function(
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
-  samples <- split(
-      SCAR_obj@sample_sheet[, .(sample_name, sample_bams)],
-      by = "sample_name",
-      keep.by = FALSE
-    )
-    samples <- map(samples, as.character)
-
-    if (any(!is.na(SCAR_obj@sample_sheet[["control_bams"]]))) {
-      controls <- split(
-        unique(SCAR_obj@sample_sheet[
-          !is.na(control_file_1),
-          .(control_name, control_bams)
-        ]),
-        by = "control_name",
-        keep.by = FALSE
-      )
-      controls <- map(controls, as.character)
-      samples <- c(samples, controls)
+	if (!is.na(in_bam) && !is.na(in_bg)) {
+		print_message("bam and bg detected as inputs - not allowed - exiting")
+		command <- "exit"
+		system(command)
 	}
+
   ## Conversion of bams to bedgraphs
-  iwalk(samples, function(x, y) {
+  if (!is.na(in_bam)) {
+		command <- str_c(
+			"genomecov",
+			"-ibam",
+			in_bam,
+			"-bga|awk",
+			"'$4==0'",
+			">", str_c(outdir, "in.bg"),
+			sep = " "
+			)
+	print_message("bedtools - processing input bam")
+	system2("bedtools", args=command, stderr=str_c(outdir, "log.txt"))
+	}
 
-  	command <- str_c(
-  		"genomecov",
-		"-ibam",
-		x,
-		"-bga|awk",
-		"'$4==0'",
-		">", str_c(outdir, str_c(y, "_bam.bg")),
-    	sep = " "
-    	)
+	if (!is.na(in_bg)) {
+		command <- str_c(
+			"awk",
+			"'$4==0'",
+			in_bg,
+			">", str_c(outdir, "in.bg"),
+			sep = " "
+			)
+	print_message("Processing input bedgraph")
+	system(command)
+	}
 
-		print_message("bedtools - converting bam to bedgraph for protected sequence analysis")
-		system2("bedtools", args=command, stderr=str_c(outdir, y, "_log.txt"))
 
-  	## Compare bg to input bed file
-  	command <- str_c(
-  		"intersect",
-  		"-a",
-  		str_c(outdir, str_c(y, "_bam.bg")),
-  		"-b",
+  ## Compare bg to input bed file
+  command <- str_c(
+  	"intersect",
+  	"-a",
+  	str_c(outdir, "in.bg"),
+  	"-b",
 		bed_file,
-  		">", str_c(outdir, str_c(y, "_overlap.bed")),
-  		sep = " "
-  		)
+  	">", str_c(outdir, "bg_lows_in_peaks.bed"),
+  	sep = " "
+  	)
 
-		print_message("bedtools - finding low bam signal within bed file regions")
-		system2("bedtools", args=command, stderr=str_c(outdir, y, "_log.txt"))
+	print_message("bedtools - finding low bam signal within bed file regions")
+	system2("bedtools", args=command, stderr=str_c(outdir, "intersect_log.txt"))
 
-  })
 	## Add settings to SCAR object.
   print_message("Assigning alignment dir to outdir")
   SCAR_obj <- set_settings(SCAR_obj, alignment_dir = outdir)

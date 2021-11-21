@@ -4,12 +4,22 @@
 \alias{pf_analysis}
 \title{Protected fragment analysis}
 \usage{
-pf_analysis(SCAR_obj, outdir = getwd(), bed_file = bed_file)
+pf_analysis(
+  SCAR_obj,
+  outdir = getwd(),
+  in_bam = NA,
+  in_bg = NA,
+  bed_file = bed_file
+)
 }
 \arguments{
 \item{SCAR_obj}{SCAR object.}
 
 \item{outdir}{Output directory.}
+
+\item{in_bam}{path to an input bam, leave blank if none}
+
+\item{in_bg}{path to an input bedgraph, leave blank if none}
 
 \item{bed_file}{A bed file of regions to be checked for local low signal sites in aligned bams}
 }

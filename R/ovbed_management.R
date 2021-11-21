@@ -16,10 +16,7 @@ add_ovbed <- function(
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
   sample_sheet[,
-    	sample_ovbeds := str_c(alignment_dir, sample_name, "_overlap.bed")]
-
-  sample_sheet[,
-    	control_ovbeds := str_c(alignment_dir, control_name, "_overlap.bed")]
+    	ov_bed := str_c(alignment_dir, "bg_lows_in_peaks.bed")]
 
   ## Add new sample sheet back to SCAR object.
   SCAR_obj@sample_sheet <- sample_sheet

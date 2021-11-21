@@ -99,12 +99,12 @@ make_tracks <- function(
         command, "--effectiveGenomeSize", genome_size, sep = " ")
     }
 
-    if (skip_non_covered) {
+    if (!is.na(skip_non_covered)) {
       command <- str_c(
         command, "--skipNonCoveredRegions", sep = " ")
     }
 
-	if (center_reads) {
+	if (!is.na(center_reads)) {
       command <- str_c(
         command, "--centerReads", sep = " ")
     }
