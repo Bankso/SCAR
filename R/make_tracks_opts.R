@@ -5,7 +5,7 @@
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
 #' @param compare TRUE or FALSE - should bamCompare or bamCoverage be performed
-#' @param scale_method Default is 'readCount', other options are 'SES' and 'NONE' 
+#' @param scale_method Default is 'readCount', other options are 'SES' and 'NONE'
 #' @param comp_op Operation for bamCompare
 #' @param bin_size Bin size for coverage summary.
 #' @param normalize_using Either 'CPM' or 'RPGC'/'RPKM'.
@@ -28,7 +28,7 @@
 #'
 #' @export
 
-make_tracks <- function(
+make_tracks_opts <- function(
   SCAR_obj,
   outdir = getwd(),
   compare = FALSE,
@@ -52,7 +52,6 @@ make_tracks <- function(
   ## Input checks.
   paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
   analysis_type <- pull_setting(SCAR_obj, "analysis_type")
-  compare <- as.logical(pull_setting(SCAR_obj, "compare"))
 
   ## Set temporary directory.
   if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE)
@@ -61,87 +60,117 @@ make_tracks <- function(
   ## Make output directory if it doesn't exist.
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
-  ## Get bams.
-  samples <- split(
+  ## Get bams
+
+  if (compare == TRUE) {
+  	samples <- split(
   	SCAR_obj@sample_sheet[, .(sample_name, sample_bams, control_bams)],
   	by = "sample_name",
   	keep.by = FALSE
   	)
    samples <- map(samples, as.character)
+   }
 
+  if (compare == FALSE) {
+  samples <- split(
+	SCAR_obj@sample_sheet[, .(sample_name, sample_bams)],
+	by = "sample_name",
+	keep.by = FALSE
+	)
+	samples <- map(samples, as.character)
+
+  if (any(!is.na(SCAR_obj@sample_sheet[["sample_bams"]]))) {
+	controls <- split(
+		unique(SCAR_obj@sample_sheet[
+          !is.na(control_bams),
+          .(control_name, control_bams)
+		  ]),
+		  by = "control_name",
+        keep.by = FALSE
+      )
+      controls <- map(controls, as.character)
+      samples <- c(samples, controls)
+    }
+  }
 
   ## Prepare command.
   iwalk(samples, function(x, y) {
 	    command <- str_c(
-	    "-b1", x[1],
-	    if (compare) {
-		str_c(
-	    		"-b2", x[2],
-	    		"--operation", comp_op,
-	    		"-o", str_c(
-	    			outdir, y, "_", comp_op, "_control.cov", sep = "")
-			}
-
-	    else {
-		str_c(
-	    		"-o", str_c(
-	    			outdir, y, ".cov", sep = ""),
-	    	}
-	    
-	    "-bs", bin_size,
+				if (compare) {
+					str_c(
+						"-b1", x[1],
+						"-b2", x[2],
+						"--operation", comp_op,
+						"-o", str_c(
+	    			outdir, y, "_", comp_op, "_control.cov", sep = ""))
+					}
+					else {
+						str_c(
+							"-b", x,
+							"-o", str_c(
+							outdir, y, ".cov", sep = ""))
+							},
+			"-bs", bin_size,
 	    "-of", out_type,
-	    "-p", pull_setting(SCAR_obj, "ncores"), sep = " ")
+	    "-p", pull_setting(SCAR_obj, "ncores"),
+			sep = " ")
 
-	if (!is.na(scale_method) && compare) {
+		if (!is.na(scale_method) && compare) {
       command <- str_c(
         command, "--scaleFactorsMethod", scale_method, sep = " ")
-    }
+			}
 
-	if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
+		if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
       command <- str_c(
         command, "--normalizeUsing", normalize_using, sep = " ")
-    }
+			}
 
-    if (all(!is.na(scale_factors))) {
+  	if (all(!is.na(scale_factors))) {
       command <- str_c(command, str_c(
         "--scaleFactor", scale_factors[y], sep = " "), sep = " ")
-    }
+			}
 
-    if (!is.na(genome_size)) {
+  	if (!is.na(genome_size)) {
       command <- str_c(
         command, "--effectiveGenomeSize", genome_size, sep = " ")
-    }
+			}
 
     if (!is.na(skip_non_covered)) {
       command <- str_c(
         command, "--skipNonCoveredRegions", sep = " ")
-    }
+			}
 
-	if (!is.na(center_reads)) {
+		if (!is.na(center_reads)) {
       command <- str_c(
         command, "--centerReads", sep = " ")
-    }
+			}
 
     if (!is.na(min_fragment)) {
       command <- str_c(
-        command, "--minFragmentLength", min_fragment, sep = " ")
-    }
+		command, "--minFragmentLength", min_fragment, sep = " ")
+    	}
+
     if (!is.na(max_fragment)) {
       command <- str_c(
         command, "--maxFragmentLength", max_fragment, sep = " ")
-    }
+			}
 
     if (!is.na(extend_reads) && paired_status) {
       command <- str_c(command, "-e", sep = " ")
-    } else if (!is.na(extend_reads) && !paired_status) {
-      command <- str_c(command, "-e", extend_reads, sep = " ")
-    }
+			}
+			else if (!is.na(extend_reads) && !paired_status) {
+				command <- str_c(command, "-e", extend_reads, sep = " ")
+				}
 
-	  print_message("Deeptools - building comparison tracks from aligned reads")
-	  system2("bamCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))
-	}
+	  print_message("Deeptools - building tracks from indexed bams")
+	  if (compare == TRUE) {
+		system2("bamCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))
+			}
+			else {
+				system2("bamCoverage", args=command, stderr=str_c(outdir, y, "_log.txt"))
+				}
+  }
   )
-}
 
   ## Add settings to SCAR object.
   print_message("Assigning alignment dir to outdir")
