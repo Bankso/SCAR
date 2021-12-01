@@ -1,5 +1,5 @@
 # SpLiT-ChEC Analysis with R (SCAR)
-## Version 1.1
+## Version 1.3
 ### Why does this exist?
 
 This repository houses SCAR, a NGS data analysis pipeline based on ZentTools from gzentner and rpolicastro. 
@@ -63,7 +63,7 @@ sbatch scripts/run_start.sh $PWD scripts/process_options.R Run_name sample_dir s
 The analysis types flagged as 'TRUE' in process_settings.R will be performed, at the moment these include:  
 FASTQ -> BAM (samples and controls, paired or unpaired reads)  
   
-BAM -> bigwig/bedgraph (samples and controls via bamCompare, no bamCoverage option right now)
+BAM -> bigwig/bedgraph (samples and controls via bamCompare, bamCoverage, bigwigCompare)
   
 BAM/bedgraph -> peaks (requires both sample and control bams or bedgraphs, via SEACR)  
   
