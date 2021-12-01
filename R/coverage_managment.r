@@ -20,7 +20,7 @@ add_cov <- function(
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 
   if (compare == TRUE) {
-    sample_sheet[, sample_cov := str_c(
+    sample_sheet[, compared_cov := str_c(
       alignment_dir, sample_name, "_", comp_op, "_control.cov")
       ]
     }
