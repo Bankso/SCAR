@@ -7,6 +7,8 @@
 #' @param outdir Output directory.
 #' @param in_bam path to an input bam, leave blank if none
 #' @param in_bg path to an input bedgraph, leave blank if none
+#' @param thresh a cutoff for 'low' signal. Coverage regions under this threshold will be compared to
+	  the input bam file as 'low signal' regions
 #' @param bed_file A bed file of regions to be checked for local low signal sites in aligned bams
 #'
 #' @export
@@ -16,6 +18,7 @@ pf_analysis <- function(
   outdir = getwd(),
   in_bam = NA,
   in_bg = NA,
+  thresh = 0,
   bed_file = bed_file
 	)
 {
@@ -36,7 +39,8 @@ pf_analysis <- function(
 			"-ibam",
 			in_bam,
 			"-bga|awk",
-			"'$4==0'",
+			str_c(
+			  "'$4 > ", thresh, "'", sep = ""),
 			">", str_c(outdir, "in.bg"),
 			sep = " "
 			)
@@ -47,7 +51,8 @@ pf_analysis <- function(
 	if (!is.na(in_bg)) {
 		command <- str_c(
 			"awk",
-			"'$4==0'",
+			str_c(
+			  "'$4 > ", thresh, "'", sep = ""),
 			in_bg,
 			">", str_c(outdir, "in.bg"),
 			sep = " "
