@@ -16,3 +16,4 @@ working/
 ex_files\
 *.Rproj.*
 temp/
+.DS_Store
