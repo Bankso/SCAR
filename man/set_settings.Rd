@@ -14,7 +14,8 @@ set_settings(
   genome_assembly = NA,
   alignment_dir = NA,
   peak_dir = NA,
-  compare = NA
+  compare = NA,
+  plot_dir = NA
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ the gnome assembly FASTA file.}
 \item{peak_dir}{The directory containing the called peaks.}
 
 \item{compare}{For deeptools, do you want to use bamCompare?}
+
+\item{plot_dir}{directory for plotting outputs}
 }
 \description{
 Set Settings.

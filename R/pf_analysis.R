@@ -8,7 +8,7 @@
 #' @param in_bam path to an input bam, leave blank if none
 #' @param in_bg path to an input bedgraph, leave blank if none
 #' @param thresh a cutoff for 'low' signal. Coverage regions under this threshold will be compared to
-	  the input bam file as 'low signal' regions
+#'	  the input bam file as 'low signal' regions
 #' @param bed_file A bed file of regions to be checked for local low signal sites in aligned bams
 #'
 #' @export

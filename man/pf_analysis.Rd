@@ -9,6 +9,7 @@ pf_analysis(
   outdir = getwd(),
   in_bam = NA,
   in_bg = NA,
+  thresh = 0,
   bed_file = bed_file
 )
 }
@@ -20,6 +21,9 @@ pf_analysis(
 \item{in_bam}{path to an input bam, leave blank if none}
 
 \item{in_bg}{path to an input bedgraph, leave blank if none}
+
+\item{thresh}{a cutoff for 'low' signal. Coverage regions under this threshold will be compared to
+the input bam file as 'low signal' regions}
 
 \item{bed_file}{A bed file of regions to be checked for local low signal sites in aligned bams}
 }

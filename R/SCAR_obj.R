@@ -68,9 +68,9 @@ SCAR_maker <- function(
      parameter = c(
        "analysis_type", "paired", "ncores", "genome_dir",
        "genome_index", "genome_assembly", "alignment_dir",
-       "peak_dir", "compare"
+       "peak_dir", "compare", "plot_dir"
     ),
-     value = c(analysis_type, paired, ncores, rep("", 5), compare)
+     value = c(analysis_type, paired, ncores, rep("", 5), compare, "")
   )
 
   ## Create the SCAR object.

@@ -14,6 +14,7 @@
 #' @param alignment_dir The directory containing the aligned reads.
 #' @param peak_dir The directory containing the called peaks.
 #' @param compare For deeptools, do you want to use bamCompare?
+#' @param plot_dir directory for plotting outputs
 #'
 #' @export
 
@@ -27,7 +28,8 @@ set_settings <- function(
   genome_assembly = NA,
   alignment_dir = NA,
   peak_dir = NA,
-  compare = NA
+  compare = NA,
+  plot_dir = NA
 ) {
 
   settings <- copy(SCAR_obj@settings)
@@ -66,6 +68,10 @@ set_settings <- function(
 
   if (!is.na(compare)) {
     settings[parameter == "compare", value := compare]
+  }
+
+  if (!is.na(plot_dir)) {
+  	settings[parameter == "plot_dir", value := plot_dir]
   }
 
   SCAR_obj@settings <- settings
