@@ -102,13 +102,15 @@ make_tracks_opts <- function(
 						"-b2", x[2],
 						"--operation", comp_op,
 						"-o", str_c(
-	    			outdir, y, "_", comp_op, "_control.cov", sep = ""))
+	    			outdir, y, "_", comp_op, "_control.cov", sep = ""),
+						sep = " ")
 					}
 					else {
 						str_c(
 							"-b", x,
 							"-o", str_c(
-							outdir, y, ".cov", sep = ""))
+							outdir, y, ".cov", sep = ""),
+							sep = " ")
 							},
 			"-bs", bin_size,
 	    "-of", out_type,
@@ -161,7 +163,8 @@ make_tracks_opts <- function(
 			else if (!is.na(extend_reads) && !paired_status) {
 				command <- str_c(command, "-e", extend_reads, sep = " ")
 				}
-
+		
+	  print_message(command)
 	  print_message("Deeptools - building tracks from indexed bams")
 	  if (compare == TRUE) {
 		system2("bamCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))
