@@ -4,7 +4,7 @@
 \alias{add_cov}
 \title{Add coverage tracks to Sample Sheet}
 \usage{
-add_cov(SCAR_obj, alignment_dir, comp_op = "comp")
+add_cov(SCAR_obj, alignment_dir, comp_op = NA, compare = NA)
 }
 \arguments{
 \item{SCAR_obj}{SCAR object.}
@@ -12,6 +12,8 @@ add_cov(SCAR_obj, alignment_dir, comp_op = "comp")
 \item{alignment_dir}{Directory of aligned reads.}
 
 \item{comp_op}{Operation for bamCompare}
+
+\item{compare}{Designation to add comp or regular cov to sample list}
 }
 \description{
 Add coverage tracks to Sample Sheet

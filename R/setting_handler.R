@@ -15,6 +15,7 @@
 #' @param peak_dir The directory containing the called peaks.
 #' @param compare For deeptools, do you want to use bamCompare?
 #' @param plot_dir directory for plotting outputs
+#' @param comp_op Single operation for comparison of coverage
 #'
 #' @export
 
@@ -29,7 +30,8 @@ set_settings <- function(
   alignment_dir = NA,
   peak_dir = NA,
   compare = NA,
-  plot_dir = NA
+  plot_dir = NA,
+  comp_op = NA
 ) {
 
   settings <- copy(SCAR_obj@settings)
@@ -72,6 +74,10 @@ set_settings <- function(
 
   if (!is.na(plot_dir)) {
   	settings[parameter == "plot_dir", value := plot_dir]
+  }
+  
+  if (!is.na(comp_op)) {
+  	settings[parameter == "comp_op", value := comp_op]
   }
 
   SCAR_obj@settings <- settings

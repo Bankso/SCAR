@@ -18,7 +18,7 @@
 compare_bws <- function(
   SCAR_obj,
   outdir = getwd(),
-  comp_op = "log2",
+  comp_op = NA,
   bin_size = 1,
   skip_zeros = TRUE,
   skip_non_covered = FALSE,
@@ -72,7 +72,8 @@ compare_bws <- function(
       command <- str_c(
         command, "-r", roi, sep = " ")
 			}
-
+	
+	print_message(command)
 	print_message("Deeptools - building comparison tracks from input bigWigs")
 	system2("bigwigCompare", args=command, stderr=str_c(outdir, y, "_log.txt"))
 

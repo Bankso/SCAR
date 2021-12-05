@@ -51,10 +51,10 @@ plot_heatmap <- function(
 	    		## Standard command, used if no other string is provided
 	  			command <- str_c(command,
 	  											 if (!is.na(clust)) {
-	  											 	str_c("--hclust", clust)
+	  											 	str_c("--hclust", clust, sep = " ")
 	  											 },
 	  											 	"--plotHeight", 10, "--plotwidth", 10,
-	  											 "-T", str_c(y, "signal in given BED regions"),
+	  											 "-T", str_c(y, "signal in given BED regions", sep = " "),
 	  											 "--colorMap", "cividis",
 	  											 "--boxAroundHeatmaps", "no",
 	  											 sep = " ")
@@ -77,7 +77,7 @@ plot_heatmap <- function(
   											 	str_c("--hclust", clust)
   											 },
   											 "--plotHeight", 10, "--plotwidth", 10,
-  											 "-T", str_c(y, "signal in given BED regions"),
+  											 "-T", "Sample signal in given BED regions",
   											 "--colorMap", "cividis",
   											 "--boxAroundHeatmaps", "no",
   											 sep = " ")

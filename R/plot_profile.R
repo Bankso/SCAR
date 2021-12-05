@@ -51,10 +51,10 @@ plot_profile <- function(
 	    		## Standard command, used if no other string is provided
 	  			command <- str_c(command,
 	  											 if (!is.na(clust)) {
-	  											 	str_c("--hclust", clust)
+	  											 	str_c("--hclust", clust, sep = " ")
 	  											 },
 	  											 	"--plotHeight", 10, "--plotwidth", 10,
-	  											 "-T", str_c(y, "signal in given BED regions"),
+	  											 "-T", str_c(y, "signal in given BED regions", sep = " "),
 	  											 sep = " ")
 	    										}
   	}
@@ -71,15 +71,17 @@ plot_profile <- function(
   			## Standard command, used if no other string is provided
   			command <- str_c(command,
   											 if (!is.na(clust)) {
-  											 	str_c("--hclust", clust)
+  											 	str_c("--hclust", clust, sep = " ")
   											 },
   											 "--plotHeight", 10, "--plotwidth", 10,
-  											 "-T", "Matrix signal in given BED regions",
+  											 "-T", "Sample signal in given BED regions",
   											 sep = " ")
   		}
   	}
+  
+  print_message(command)
 	print_message("Deeptools - building a profile plot from inputs")
-	system2("plotProfile", args=command, stderr=str_c(outdir, y, "_log.txt"))
+	system2("plotProfile", args=command, stderr=str_c(outdir, y, "_profile_log.txt"))
   	}
   )
 

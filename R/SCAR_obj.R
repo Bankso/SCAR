@@ -31,6 +31,7 @@ setClass(
 #' @param paired Whether the run is paired (TRUE) or unpaired (FALSE)
 #' @param ncores The number of cores/threads to use.
 #' @param compare TRUE/FALSE perform bamCompare instead of Coverage
+#' @param comp_op Single operation for comparison of coverage
 #'
 #' @return A SCAR object.
 #'
@@ -42,7 +43,8 @@ SCAR_maker <- function(
   sep = "\t",
   paired = NA,
   ncores = NA,
-  compare = NA
+  compare = NA,
+  comp_op = NA
 ) {
 
   ## Prepare the sample sheet.
@@ -68,9 +70,9 @@ SCAR_maker <- function(
      parameter = c(
        "analysis_type", "paired", "ncores", "genome_dir",
        "genome_index", "genome_assembly", "alignment_dir",
-       "peak_dir", "compare", "plot_dir"
+       "peak_dir", "compare", "plot_dir", "comp_op"
     ),
-     value = c(analysis_type, paired, ncores, rep("", 5), compare, "")
+     value = c(analysis_type, paired, ncores, rep("", 5), compare, "", "")
   )
 
   ## Create the SCAR object.

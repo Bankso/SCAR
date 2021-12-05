@@ -4,18 +4,22 @@
 #' @param SCAR_obj SCAR object.
 #' @param alignment_dir Directory of aligned reads.
 #' @param comp_op Operation for bamCompare
+#' @param compare Designation to add comp or regular cov to sample list
+#' 
 #' @export
 
 add_cov <- function(
   SCAR_obj,
   alignment_dir,
-  comp_op = 'comp'
+  comp_op = NA,
+  compare = NA
 ) {
 
   ## Grab some info from object and prepare inputs.
-  analysis_type <- pull_setting(SCAR_obj, "analysis_type")
-  compare <- as.logical(pull_setting(SCAR_obj, "compare"))
+  analysis_type <- pull_setting(SCAR_obj, 'analysis_type')
   alignment_dir <- pull_setting(SCAR_obj, 'alignment_dir')
+  compare <- pull_setting(SCAR_obj, 'compare')
+  comp_op <- pull_setting(SCAR_obj, 'comp_op')
   
   sample_sheet <- copy(SCAR_obj@sample_sheet)
 

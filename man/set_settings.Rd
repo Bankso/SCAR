@@ -15,7 +15,8 @@ set_settings(
   alignment_dir = NA,
   peak_dir = NA,
   compare = NA,
-  plot_dir = NA
+  plot_dir = NA,
+  comp_op = NA
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ the gnome assembly FASTA file.}
 \item{compare}{For deeptools, do you want to use bamCompare?}
 
 \item{plot_dir}{directory for plotting outputs}
+
+\item{comp_op}{Single operation for comparison of coverage}
 }
 \description{
 Set Settings.

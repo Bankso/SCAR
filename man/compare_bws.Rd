@@ -7,7 +7,7 @@
 compare_bws(
   SCAR_obj,
   outdir = getwd(),
-  comp_op = "log2",
+  comp_op = NA,
   bin_size = 1,
   skip_zeros = TRUE,
   skip_non_covered = FALSE,

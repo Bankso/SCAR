@@ -43,40 +43,51 @@ make_matrix <- function(
   ## Prepare command.
   iwalk(samples, function(x, y) {
 	    command <- str_c(
-					primary, "-S",
-					if (!is.na(s_n_c)){
+					
+	    		primary, "-S",
+					
+					if (!is.na(s_n_c)) {
+						
 						if (s_n_c == "s") {
 							x[1]
 						}
+						
 						if (s_n_c == "n") {
 							x[2]
 						}
+						
 						if (s_n_c == "c") {
 							x[3]
 						}
+						
 						else {
 							s_n_c
 						}
 					},
-					"-R", if (!is.na(regions)) {
-									regions
-									} else {
-											x[4]
-								},
+					"-R", 
+					if (!is.na(regions)) {
+						regions
+						}
+						
+						else {
+							x[4]
+							},
+					
 					"-o", str_c(outdir, y, ".matrix"),
-					"--outFileNameMatrix", str_c(outdir, y, "_mat.values"),
 					sep = " ")
 
 	  	if (!is.na(in_str)) {
 	    	command <- str_c(command, str_c(in_str), sep = " ")
-	    }	else {
-	    		## Standard command, used if no other string is provided
+	  	}
+	    
+	    	else {
 	  			command <- str_c(command, "--referencePoint", "center", "-b", 500,
 	  								 "-a", 500, "-bs", 1, sep = " ")
 	    }
-
+	
+	print_message(command)
 	print_message("Deeptools - building a plottable matrix from inputs")
-	system2("computeMatrix", args=command, stderr=str_c(outdir, y, "_log.txt"))
+	system2("computeMatrix", args=command, stderr=str_c(outdir, y, "_mat_log.txt"))
 
   }
   )

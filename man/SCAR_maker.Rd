@@ -10,7 +10,8 @@ SCAR_maker(
   sep = "\\t",
   paired = NA,
   ncores = NA,
-  compare = NA
+  compare = NA,
+  comp_op = NA
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ SCAR_maker(
 \item{ncores}{The number of cores/threads to use.}
 
 \item{compare}{TRUE/FALSE perform bamCompare instead of Coverage}
+
+\item{comp_op}{Single operation for comparison of coverage}
 }
 \value{
 A SCAR object.
