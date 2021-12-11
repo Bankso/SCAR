@@ -53,7 +53,7 @@ plot_heatmap <- function(
 	  											 if (!is.na(clust)) {
 	  											 	str_c("--hclust", clust, sep = " ")
 	  											 },
-	  											 	"--plotHeight", 10, "--plotwidth", 10,
+	  											 	"--plotHeight", 10, "--plotWidth", 10,
 	  											 "-T", str_c(y, "signal in given BED regions", sep = " "),
 	  											 "--colorMap", "cividis",
 	  											 "--boxAroundHeatmaps", "no",
@@ -76,7 +76,7 @@ plot_heatmap <- function(
   											 if (!is.na(clust)) {
   											 	str_c("--hclust", clust)
   											 },
-  											 "--plotHeight", 10, "--plotwidth", 10,
+  											 "--plotHeight", 10, "--plotWidth", 10,
   											 "-T", "Sample signal in given BED regions",
   											 "--colorMap", "cividis",
   											 "--boxAroundHeatmaps", "no",

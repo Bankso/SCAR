@@ -6,6 +6,7 @@
 #' @param outdir Output directory.
 #' @param compare TRUE or FALSE - should bamCompare or bamCoverage be performed
 #' @param scale_method Default is 'readCount', other options are 'SES' and 'NONE'
+#' @param MNase Calculate nucleosome positions for the input BAMs? Paired only
 #' @param comp_op Operation for bamCompare
 #' @param bin_size Bin size for coverage summary.
 #' @param normalize_using Either 'CPM' or 'RPGC'/'RPKM'.
@@ -33,6 +34,7 @@ make_tracks_opts <- function(
   outdir = getwd(),
   compare = FALSE,
   scale_method = NA,
+  MNase = FALSE,
   comp_op = "log2",
   bin_size = 1,
   normalize_using = NA,
@@ -120,7 +122,12 @@ make_tracks_opts <- function(
 		if (!is.na(scale_method) && compare) {
       command <- str_c(
         command, "--scaleFactorsMethod", scale_method, sep = " ")
-			}
+      }
+	    
+	  if (MNase == TRUE) {
+	    command <- str_c(
+	    	command, "--MNase", sep = " ")
+	    }
 
 		if (all(is.na(scale_factors)) && !is.na(normalize_using)) {
       command <- str_c(

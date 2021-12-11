@@ -9,6 +9,7 @@ make_tracks_opts(
   outdir = getwd(),
   compare = FALSE,
   scale_method = NA,
+  MNase = FALSE,
   comp_op = "log2",
   bin_size = 1,
   normalize_using = NA,
@@ -33,6 +34,8 @@ make_tracks_opts(
 \item{compare}{TRUE or FALSE - should bamCompare or bamCoverage be performed}
 
 \item{scale_method}{Default is 'readCount', other options are 'SES' and 'NONE'}
+
+\item{MNase}{Calculate nucleosome positions for the input BAMs? Paired only}
 
 \item{comp_op}{Operation for bamCompare}
 
