@@ -20,7 +20,7 @@ conda install -n SCAR_env -y -c conda-forge -c bioconda -c defaults \
 r-devtools r-tidyverse r-data.table r-gtools r-stringr r-ggpubr r-biocmanager \
 bioconductor-edger bioconductor-deseq2 bioconductor-rsubread \
 bioconductor-chipseeker bioconductor-rsamtools \
-fastqc star samtools bowtie2 deeptools bedtools \
+fastqc star samtools bowtie2 deeptools bedtools macs2 \
 parallel requests
 
 ## Update environment.
