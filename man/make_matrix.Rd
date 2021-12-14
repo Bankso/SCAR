@@ -10,7 +10,8 @@ make_matrix(
   primary = "reference-point",
   s_n_c = NA,
   in_str = NA,
-  regions = NA
+  regions = NA,
+  peak_type = NA
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ computeMatrix}
 
 \item{regions}{A bed file defining regions to be plotted; if none entered,
 the peak file from peak finding will be used}
+
+\item{peak_type}{Peak finder used to make input peaks, 'macs' or 'seacr'}
 }
 \description{
 Convert coverage file to matrix

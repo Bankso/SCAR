@@ -4,14 +4,14 @@
 \alias{add_beds}
 \title{Add BEDs to Sample Sheet}
 \usage{
-add_beds(SCAR_obj, peak_dir, stringent = stringent)
+add_beds(SCAR_obj, peak_dir, peak_type = peak_type, stringent = stringent)
 }
 \arguments{
 \item{SCAR_obj}{SCAR object.}
 
 \item{peak_dir}{Peak directory for SEACR output}
 
-\item{stringent}{was SEACR run with the "stringent" flag?}
+\item{stringent}{was SEACR run with the 'stringent' flag?}
 }
 \description{
 Add BEDs to Sample Sheet

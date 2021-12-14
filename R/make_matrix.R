@@ -11,6 +11,7 @@
 #'        computeMatrix
 #' @param regions A bed file defining regions to be plotted; if none entered,
 #'        the peak file from peak finding will be used
+#' @param peak_type Peak finder used to make input peaks, 'macs' or 'seacr'
 #' @export
 
 make_matrix <- function(
@@ -19,7 +20,8 @@ make_matrix <- function(
   primary = "reference-point",
   s_n_c = NA,
   in_str = NA,
-  regions = NA
+  regions = NA,
+  peak_type = NA
 ) {
 
   ## Make output directory if it doesn't exist.
@@ -33,7 +35,8 @@ make_matrix <- function(
 				sample_cov,
 				control_cov,
 				compared_cov,
-				sample_beds)],
+				macs_peaks,
+				seacr_peaks)],
 			by = "sample_name",
 			keep.by = FALSE
 			)
@@ -68,11 +71,12 @@ make_matrix <- function(
 					if (!is.na(regions)) {
 						regions
 						}
-						
-						else {
+						else if (peak_type == "macs") {
 							x[4]
-							},
-					
+							}
+						else if (peak_type == "seacr") {
+							x[5]
+						},
 					"-o", str_c(outdir, y, ".matrix"),
 					sep = " ")
 

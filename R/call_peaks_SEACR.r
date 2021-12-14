@@ -21,9 +21,10 @@ call_peaks_SEACR <- function(
   sep = ""
   )
 {
-
+	peak_dir <- str_c(outdir, "seacr/")
+	
   ## Make sure the output directory exists.
-  if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
+  if (!dir.exists(peak_dir)) dir.create(peak_dir, recursive = TRUE)
 
   ## Get your bgs
   samples <- split(
@@ -73,22 +74,23 @@ call_peaks_SEACR <- function(
 			)
 		}
 	command <- str_c(
-			command, str_c(outdir, y), sep = " "
+			command, str_c(peak_dir, y), sep = " "
 			)
 	}
   )
 
   ## Run the commands.
-  print_message("Calling peaks from the aligned reads.")
+  print_message("SEACR- calling peaks from the aligned reads")
   walk(commands, system2(
-  	"bash", args=commands, stderr=str_c(outdir, "SEACR_log.txt"))
+  	"bash", args=commands, stderr=str_c(peak_dir, "SEACR_log.txt"))
   	)
 
   ## Save the peak directory.
-  SCAR_obj <- set_settings(SCAR_obj, peak_dir=outdir)
+  SCAR_obj <- set_settings(SCAR_obj, peak_dir=peak_dir)
 
   ## Add new BEDs to peak_dir
-  SCAR_obj <- add_beds(SCAR_obj, peak_dir=outdir, stringent=stringent)
+  SCAR_obj <- add_beds(SCAR_obj, peak_dir = peak_dir,
+  										 peak_type = "seacr", stringent = stringent)
 
   ## Return the SCAR object.
   return(SCAR_obj)
