@@ -1,5 +1,5 @@
 # SpLiT-ChEC Analysis with R (SCAR)
-## Version 1.4
+## Version 1.5
 ### Why does this exist?
 
 This repository houses SCAR, a NGS data analysis pipeline based on ZentTools from gzentner and rpolicastro. 
