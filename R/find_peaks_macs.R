@@ -56,7 +56,10 @@ call_peaks_macs <- function(
 			"--outdir", peak_dir,
 			"-n", y,
 			"-g", genome_size,
-			sep = " ")
+			"--keep-dup", "all",
+			"--call-summits",
+			sep = " "
+			)
 		
 		if (!is.na(in_form)) {
 			command <- str_c(
