@@ -5,7 +5,7 @@
 #' @param SCAR_obj SCAR object.
 #' @param outdir Output directory.
 #' @param process Name of the MACS function you want, def. is 'callpeaks'
-#' @param in_form Format of input, default is to auto-determine
+#' @param in_form Format of input, default is to auto-determine. If using paired-end, BAMPE or BEDPE must be indicated here.
 #' @param genome_size Size of mappable genome
 #' @param tag_size size of adaptors, default is to auto-determine
 #' @param width Width to use for model building scan, optional
@@ -13,6 +13,10 @@
 #' @param q_val min q value/FDR cutoff, optional
 #' @param p_val Set p val instead of q, optional
 #' @param broad Peaks are expected to be broad, TRUE or FALSE, default=FALSE
+#' @param min_length minimum length in bp required for a region to be a peak of signal, optional
+#' @param max_gap Minimum distance for peaks to be considered one peak. If within this distance, the peaks are merged, optional
+#' @param no_lambda Use the genome wide lambda only, without the local lambda value, TRUE or FALSE, default=FALSE
+#' @param no_model Don't calculate the shifting background model, TRUE or FALSE, default=FALSE
 #'
 #' @export
 
@@ -27,10 +31,14 @@ call_peaks_macs <- function(
 	mfold = NA,
 	q_val = NA,
 	p_val = NA,
-	broad = FALSE
+	broad = FALSE,
+	min_length = NA,
+	max_gap = NA,
+	no_lambda = FALSE,
+	no_model = FALSE
 ) {
 	
-	peak_dir <- str_c(outdir, "macs/")
+	peak_dir <- str_c(outdir, "macs3/")
 	
 	## Input checks.
 	paired_status <- as.logical(pull_setting(SCAR_obj, "paired"))
@@ -57,7 +65,6 @@ call_peaks_macs <- function(
 			"-n", y,
 			"-g", genome_size,
 			"--keep-dup", "all",
-			"--call-summits",
 			sep = " "
 			)
 		
@@ -96,10 +103,30 @@ call_peaks_macs <- function(
 				command, "--broad", sep = " ")
 		}
 		
-		print_message(command)
-		print_message("MACS2 - finding peaks in sample alignments")
+		if (!is.na(min_length)) {
+			command <- str_c(
+				command, "--min-length", min_length, sep = " ")
+		}
 		
-		system2("macs2", args=command, stderr=str_c(outdir, y, "_log.txt"))
+		if (!is.na(max_gap)) {
+			command <- str_c(
+				command, "--max-gap", max_gap, sep = " ")
+		}
+		
+		if (no_lambda == TRUE) {
+			command <- str_c(
+				command, "--nolambda", sep = " ")
+		}
+		
+		if (no_model == TRUE) {
+			command <- str_c(
+				command, "--nomodel", sep = " ")
+		}
+		
+		print_message(command)
+		print_message("MACS3 - finding peaks in sample alignments")
+		
+		system2("macs3", args=command, stderr=str_c(outdir, y, "_log.txt"))
 		
 	}
 	)
