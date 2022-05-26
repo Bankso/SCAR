@@ -2,23 +2,23 @@
 ## Version 1.5
 ### Why does this exist?
 
-This repository houses a next-generation sequencing (NGS) data analysis pipeline, SpLiT-ChEC Analysis with R (SCAR), intended to function as a highly-reproducible pipeline with easily accessible and powerful runtime settings, ideally simplifying efforts to optimize analysis for data derived from novel NGS-coupled techniques. The suite of tools integrated into SCAR is being expanded and optimized as I construct in-depth analysis processes for SpLiT-ChEC data from DNA-associating proteins in *S. cerevisiae*. 
-The framework of SCAR is derived from ZentTools, created by gzentner and rpolicastro https://github.com/rpolicastro/ZentTools
+This repository houses a next-generation sequencing (NGS) data analysis package, SpLiT-ChEC Analysis with R (SCAR). SCAR was designed to function as a reproducible bioinformatics pipeline with easily accessible runtime settings and self-documenting directories/filenames. These decisions have been made to simplify and optimize analysis for data derived from novel NGS-coupled techniques and organization of processing outputs into directory structures. The set of processes available is being expanded and optimized as we design methods to analyze SpLiT-ChEC data from DNA-associating proteins in *S. cerevisiae*. 
+The framework of SCAR is derived from ZentTools, created by gzentner and rpolicastro (https://github.com/rpolicastro/ZentTools)
 
 While SCAR has been designed for use with DNA-centric NGS techniques, the pipeline is highly amenable to modification and can easily accomodate RNA-centric analysis tools. 
 
-Current feature set:
+Current feature set and runtime options for each process (noted in parentheses):
 - Retrieve and index a reference genome (primarily use SacCer3, can be adapted to other databases and organisms)
 - FASTA/Q quality control analysis with fastQC
-- alignment to retrieved genome using bowtie2 (options to filter input fragment sizes, change alignment mode, apply MAPQ filtering)
+- Alignment to a reference genome using bowtie2 (options to filter input fragment sizes, change alignment mode, apply MAPQ filtering)
 - Coverage calculation and normalization with deeptools2 (options for centering/not centering coverage, normalization types, bin size)
-- Calculating enrichment over background with deeptools2 (options for function used in comparison,  
-- Peak finding using MACS (https://github.com/macs3-project/MACS)
-- Matrix building, heatmap and profile plotting for peaks and other input BED files (options for coverage file, input BED, plotting region bound, number of kmeans clusters to calculate/plot, data sorting type and direction)
+- Calculating enrichment over background with deeptools2 (options for function used in comparison)  
+- Peak finding using MACS (https://github.com/macs3-project/MACS) (options for broad/standard cutoffs)
+- Matrix building, heatmap and profile plotting for peaks and other input BED files using deeptools2 (options for input coverage file, input BED regions, plotting region bounds, number of kmeans clusters to calculate/plot, data sorting type and direction)
 
 In-progress features:
-- Tools written in R, python, and shell to simplify statistical analysis, counting processes, comparison to external information sources, and pre-processing/plotting of outputs
-- Implementing machine learning algorithms to robustly identify sub-groups in complex NGS datasets and generate reliable models for identifying features or comparison to new experimental results
+- Tools written in R, python, and Bash/shell to simplify statistical analysis, counting processes, comparison to external information sources, and pre-processing/plotting of outputs
+- Implementing machine learning algorithms with Python to robustly identify sub-groups in complex NGS datasets and generate reliable models for identifying features/comparison to experimental results
 
 ### How to use this software
 
@@ -70,7 +70,7 @@ Once all the files are in place, a run can be initiated with the following comma
 ```
 sbatch scripts/start/run.sh $path_to_new_home scripts/process/options.R $name_for_output $path_to_sample_files $path_to_BED_file $fragment_range
 ``` 
-Following the conclusion of each processing step, the resultant directories and files will be found in the sample directory. By default, this is some variant of sample/new_dir/out_file, where new_dir is a term corresponding to the outfile type (e.g., aligned/, coverage/, etc.)
+Following the conclusion of each processing step, the resultant directories and files will be dumped to the sample directory. By default, this is some variant of sample/new_dir/out_file, where new_dir is a term corresponding to the outfile type (e.g., aligned/, coverage/, etc.)
 
 SCAR was designed to be primarily self-documenting, so most options will be recorded in outputs or file logs. After every run, file logs are moved to a 'logs' directory in the sample directory. To make sure the log isn't overwritten with a new run, either modify the name of the log to a unique identifier or be sure to use a a new file output tag for each run with otherwise identical settings.
 
