@@ -13,8 +13,9 @@ test/
 *.Rbuildignore
 tests/
 working/
-ex_files\
+ex_files/
 *.Rproj.*
 temp/
 .DS_Store
 .Rproj.user
+script_examples/
