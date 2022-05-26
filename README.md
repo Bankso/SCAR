@@ -2,7 +2,7 @@
 ## Version 1.5
 ### Overview
 
-This repository houses a next-generation sequencing (NGS) data analysis package, SpLiT-ChEC Analysis with R (SCAR). SCAR was designed to function as a reproducible bioinformatics pipeline with easily accessible runtime settings and self-documenting directories/filenames. These decisions have been made to simplify and optimize analysis for data derived from novel NGS-coupled techniques and organization of processing outputs into directory structures. The set of processes available is being expanded and optimized as we design methods to analyze SpLiT-ChEC data from DNA-associating proteins in *S. cerevisiae*. 
+This repository houses a next-generation sequencing (NGS) data analysis package, SpLiT-ChEC Analysis with R (SCAR). SCAR was designed to function as a reproducible bioinformatics pipeline with easily accessible runtime settings and self-documenting directories/filenames. These decisions have been made to simplify and optimize analysis for data derived from novel NGS-coupled techniques and organization of processing outputs into coherent directory structures. The set of processes available is being expanded and optimized as we design methods to analyze SpLiT-ChEC data from DNA-associating proteins in *S. cerevisiae*. 
 The framework of SCAR is derived from ZentTools, created by gzentner and rpolicastro (https://github.com/rpolicastro/ZentTools)
 
 While SCAR has been designed for use with DNA-centric NGS techniques, the pipeline is highly amenable to modification and can easily accomodate RNA-centric analysis tools. 
@@ -18,24 +18,26 @@ Current feature set and runtime options for each process (noted in parentheses):
 
 In-progress features (can be found here https://github.com/Bankso/SEAPE):
 - Tools written in R, python, and Bash/shell to simplify statistical analysis, counting processes, comparison to external information sources, and pre-processing/plotting of outputs
-- Implementing machine learning algorithms with Python and/or Tensorflow to robustly identify sub-groups in complex NGS datasets and generate reliable models for identifying features/comparison to experimental results
+- Implementing clustering/machine learning algorithms with R, Python and/or Tensorflow to robustly identify sub-groups in complex NGS datasets and generate reliable models for identifying features/comparison to experimental results
 
 ### How to use this software
 
 It is recommended that SCAR is used on your local high-performance cluster or a cloud-based service, considering how long it takes to run on most single-CPU computers. I have had some success running some post-alignment functions on a single-processor desktop with sufficient RAM, but alignments generally take far too long to be done regularly on standard hardware.
 
-A Singularity container is used to bundle software and simplify reproducibility. The Singularity recipe file in this repository is used to build a signed and verified Singularity container, hosted on sylabs.io, which can be downloaded and accessed as a naive computing environment for each run in the form of a SIF with the following command: 
-```
-singularity pull --arch amd64 library://banksorion/default/scar_software:1.5_latest
-```
-The container allows processing to be carried out independently of local software by incorporating all the programs and packages necessary for all SCAR processes to run. As such, Singularity must be available for this software to function. Instructions to install Singularity can be found [here](https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps).  
-
-**Note:** You probably can't install this (or anything else) on your HPC if you are a non-admin user, so contact your admin to get help if it isn't available.
+A Singularity container is used to bundle software and simplify reproducibility. As such, Singularity must be available for this software to function. Instructions to install Singularity can be found [here](https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps). 
 
 For the UO Talapas cluster, using slurm job handling, the availability of modules can be determined with the command:
 ```
 module avail
 ```
+**Note:** You probably can't install Singularity (or anything else) on your HPC if you are a non-admin user, so contact your admin to get help if it isn't available.
+
+The Singularity recipe file in this repository is used to build a signed and verified Singularity container, hosted on sylabs.io, which can be downloaded with the following command: 
+```
+singularity pull --arch amd64 library://banksorion/default/scar_software:1.5_latest
+```
+The container allows processing to be carried out independently of local software by incorporating all the programs and packages necessary for all SCAR processes to run. Each run, the SIF as accessed as a naive computing environment to carry out the desired tasks, most of which can be easily toggled at run time. This also means directory structure is important to pay attention to. 
+I've outlined a basic directory structure below, but have also put together a repository that can be copied to your local environment and used in a "drag-and-drop" format (https://github.com/Bankso/mock_home/). From the start, I intended for SCAR to automate most organization decisions when handling processing output so users can focus more on what questions to ask next and less on where to fit everything in a file directory. 
 
 ### Processing data with SCAR
 
