@@ -7,41 +7,41 @@ library('stringr')
 
 # Set options for processing:
 
-bams <- FALSE		
-sf_low <- 0
-sf_high <- 120
-lf_low <- 140
-lf_high <- 180
-ff_low <- 0
-ff_high <- 200
-af_low <- 0
-af_high <- 500
-mode <- 'end-to-end'
-mapq_val <- 30
-comp_op <- 'ratio'
-bws <- FALSE
-cent <- TRUE
-compare_cov <- FALSE
-peaks <- FALSE
-PCF <- 'macs'
-broad_flag <- FALSE
-stringent <- TRUE
-protection <- FALSE
-plot <- TRUE
-hmap <- TRUE
-map_type <- "'heatmap and colorbar'"
-plot_comp <- TRUE
-region_file <- TRUE
-sort_op <- 'descend'
-sort_type <- 'max'
-matrix_b <- 500
-matrix_a <- 500
-s_n_c <- 'c'
-cov_out <- 'bigwig'
-comp_out <- 'bigwig'
-norm_type <- 'RPGC'
-clust_val <- NA
-temp_dir <- 'temp/'
+bams <- FALSE #process FASTQ to BAMs with bowtie2
+sf_low <- 0 #lower size limit for small fragment (SF) alignments
+sf_high <- 120 #upper size limit for SF
+lf_low <- 140 #lower size limit for large fragment (LF) alignments
+lf_high <- 180 #upper size limit for LF
+ff_low <- 0 #lower size limit for full fragment (FF) alignments
+ff_high <- 200 #upper size limit for FF
+af_low <- 0 #lower size limit for all fragment (AF) alignments; useful for aligning longer fragments detected in ChIP-seq
+af_high <- 500 #upper size limit for AF
+mode <- 'end-to-end' #'end-to-end' or 'local' alignment modes for bowtie2
+mapq_val <- 30 #set the value for samtools to filter reads by alignment quality (MAPQ) score
+comp_op <- 'ratio' #the mathematical operation to use with bamCompare; can be 'ratio', 'log2', 'add', 'subtract'. See deeptools2 documentation for more info
+bws <- FALSE #process BAM files to bigwigs
+cent <- TRUE #TRUE means use fragment centers to calculate coverage; FALSE means use fragment ends
+compare_cov <- FALSE #make coverage comparison calculations with bamCompare using the comp_op function defined above
+peaks <- FALSE #perform peak calling on BAM files
+PCF <- 'macs' #peak calling function to use; MACS is the current standard. See GitHub macs3-project/MACS for more info. SEACR is also available 
+broad_flag <- FALSE #use the built-in expanded broad peak calling limit for MACS3
+stringent <- TRUE #stringent peak calling cutoff designation for SEACR
+protection <- FALSE #[experimental] calculate central low levels of protection
+plot <- TRUE #use deeptools2 plotProfile to plot average signal based on input BED regions
+hmap <- TRUE #use deeptools2 plotHeatmap to plot signal input BED regions
+map_type <- "'heatmap and colorbar'" #type of information to be given on heatmap
+plot_comp <- TRUE 
+region_file <- TRUE #use a BED file given at command line
+sort_op <- 'descend' #how to sort the data when presenting it in the heatmap
+sort_type <- 'max' #type of sorting calculation to use
+matrix_b <- 500 #lower limit for computeMatrix, used to map coverage onto input BED regions
+matrix_a <- 500 #upper limit for computeMatrix
+s_n_c <- 'c' #type of bigwig file to use for computeMatrix. 'c' uses the built in coverage comparisons. Alternatively, a path to a bigwig file can be given
+cov_out <- 'bigwig' #output format for bamCoverage - 'bigwig' or 'bedgraph'
+comp_out <- 'bigwig' #output format for bamCompare - 'bigwig' or 'bedgraph'. Should be the same as cov_out
+norm_type <- 'RPGC' #the type of normalization to be used when calculating coverage with bamCompare. 1x normalization to genome coverage (RPGC) is recommended to deal with differences in sequencing depth
+clust_val <- NA #number of clusters to be fed to deeptools2 implementation of k-means. Produces clustered heatmaps and profiles
+temp_dir <- 'temp/' #a temporary directory for large files to be stored during processing by deeptools2
 
 # Pull input variables from Singularity
 env_vars <- Sys.getenv(c("sample_dir", "samples_file", "plot_regions", "job_name", "frag_set"), names=TRUE)
@@ -54,8 +54,10 @@ job_name <- env_vars[['job_name']]
 run_type <- env_vars[['frag_set']]
 rel_dir <- getwd()
 
+#Set the directory tag based on input fragment type
 dir_tag <- str_c('_', if (run_type == 'large') {'lf'} else if (run_type == 'small') {'sf'} else if (run_type == 'full') {'ff'} else if (run_type == 'all') {'af'})
 
+#Set the read tag denoting if fragment ends or centers are being used
 if (!is.na(cent) && (cent == TRUE)) {read_tag <- str_c('_cent')}
 if (is.na(cent)) {read_tag <- str_c('_bin')}
 
