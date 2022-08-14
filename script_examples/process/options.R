@@ -5,7 +5,7 @@
 library('SCAR')
 library('stringr')
 
-# Set options for processing:
+# Set options for processing; commonly changed options are listed here, but more are available within the functions below
 
 bams <- FALSE #process FASTQ to BAMs with bowtie2
 sf_low <- 0 #lower size limit for small fragment (SF) alignments
@@ -30,7 +30,7 @@ protection <- FALSE #[experimental] calculate central low levels of protection
 plot <- TRUE #use deeptools2 plotProfile to plot average signal based on input BED regions
 hmap <- TRUE #use deeptools2 plotHeatmap to plot signal input BED regions
 map_type <- "'heatmap and colorbar'" #type of information to be given on heatmap
-plot_comp <- TRUE 
+#plot_comp <- TRUE #[deprecated] plot comparison traces or individual coverage. Superceded by s_n_c
 region_file <- TRUE #use a BED file given at command line
 sort_op <- 'descend' #how to sort the data when presenting it in the heatmap
 sort_type <- 'max' #type of sorting calculation to use
@@ -61,7 +61,7 @@ dir_tag <- str_c('_', if (run_type == 'large') {'lf'} else if (run_type == 'smal
 if (!is.na(cent) && (cent == TRUE)) {read_tag <- str_c('_cent')}
 if (is.na(cent)) {read_tag <- str_c('_bin')}
 
-# Create sample sheet from input sample file
+# Create sample sheet from input sample file, can contain just sample FASTQs or sample and control
 samples <- read.delim(samples_file, sep='\t')
 
 # Create SCAR_obj, holds settings and file paths
@@ -78,6 +78,8 @@ sample_id <- SCAR_obj@sample_sheet[['sample_name']]
 
 # Logic gates to decide how to name files and what to process
 
+#Record input BED file if given for use with deeptools2
+
 if (!(region_file)) {
 	region_file <- NA
 	}
@@ -86,6 +88,7 @@ if (!is.na(region_file)) {
 	region_file <- str_c(rel_dir, '/', plot_regions)
 	}
 
+#Make sure BAM names are added to SCAR object if not being processed
 if (!bams) {
 	SCAR_obj <- add_bams(
 		SCAR_obj,
@@ -93,49 +96,53 @@ if (!bams) {
 		)
 	}
 
+#Make sure bigWig names are added to SCAR object if not being processed
 if (!bws) {
-	if (plot || hmap) {
+	if (plot || hmap) { #if plots or heatmaps are requested
 
-		if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE)
+		if (!dir.exists(temp_dir)) dir.create(temp_dir, recursive = TRUE) #make sure temp dir is present for deeptools2
   		Sys.setenv(TMPDIR=temp_dir)
 		
-		SCAR_obj <- set_settings(SCAR_obj, compare = FALSE)
+		SCAR_obj <- set_settings(SCAR_obj, compare = FALSE) #make sure comparison isn't triggered before adding names to SCAR object
 		SCAR_obj <- set_settings(SCAR_obj,
-			alignment_dir=str_c(sample_dir, '/coverage', dir_tag, read_tag, '/'))
+			alignment_dir=str_c(sample_dir, '/coverage', dir_tag, read_tag, '/')) #add directory to SCAR object containing bigWigs for processing
 
-		cov_dir <- pull_setting(SCAR_obj, 'alignment_dir')
+		cov_dir <- pull_setting(SCAR_obj, 'alignment_dir') #make bigWig directory current processing directory
 
-		SCAR_obj <- add_cov(
+		SCAR_obj <- add_cov( #add current processing directory to SCAR object as coverage directory
 			SCAR_obj,
 			alignment_dir=cov_dir,
 			comp_op=comp_op)
 		}
 }
 
-if ((!compare_cov) && (plot || hmap || (protection && comp_out == 'bedgraph'))) {
 
-	plot_dir <- str_c(sample_dir, '/plots', dir_tag, read_tag, '_',
+if ((!compare_cov) && (plot || hmap || (protection && comp_out == 'bedgraph'))) { 
+	#if comparison is not requested, make sure bigWigCompare names are added to SCAR object
+	#Also necessary if bedgraph format is requested to prevent errors in SCAR object entries
+
+	plot_dir <- str_c(sample_dir, '/plots', dir_tag, read_tag, '_', #assemble name of plotting directory
 		comp_op, '_', matrix_b, '_to_', matrix_a, '/')
-	SCAR_obj <- set_settings(SCAR_obj, compare = TRUE)
-	SCAR_obj <- set_settings(SCAR_obj, comp_op=comp_op)
+	SCAR_obj <- set_settings(SCAR_obj, compare = TRUE) #indicate comparison is requested to add_cov function
+	SCAR_obj <- set_settings(SCAR_obj, comp_op=comp_op) #record the operation used for comparison
 
-	comp_op <- pull_setting(SCAR_obj, 'comp_op')
+	comp_op <- pull_setting(SCAR_obj, 'comp_op') #pull comp_op for specifying name of comparison directory
 
-	if (comp_out == 'bigwig') {
+	if (comp_out == 'bigwig') { #set bigwig output as active
 		SCAR_obj <- set_settings(SCAR_obj,
 		alignment_dir=str_c(sample_dir, '/coverage', dir_tag, read_tag,
 			'/bw_comp_', comp_op, '/'))
 			}
 
-	else if (comp_out == 'bedgraph') {
+	else if (comp_out == 'bedgraph') { #set bedgraph output as active
 		SCAR_obj <- set_settings(SCAR_obj,
 		alignment_dir=str_c(sample_dir, '/coverage', dir_tag, read_tag,
 			'/bg_comp_', comp_op, '/'))
 			}
 
-	alignment_dir <- pull_setting(SCAR_obj, 'alignment_dir')
+	alignment_dir <- pull_setting(SCAR_obj, 'alignment_dir') #pull active directory from SCAR object
 
-	SCAR_obj <- add_cov(
+	SCAR_obj <- add_cov( #assign active directory to comparison slot in SCAR object
 		SCAR_obj,
 		alignment_dir=alignment_dir,
 		comp_op=comp_op
@@ -144,7 +151,7 @@ if ((!compare_cov) && (plot || hmap || (protection && comp_out == 'bedgraph'))) 
 
 
 
-if (!peaks) {
+if (!peaks) { #if peak calling is not requested, make sure peak directories are added to SCAR object
 	SCAR_obj <- add_beds(
 			SCAR_obj,
 			peak_dir=str_c(sample_dir, '/peaks', dir_tag, '/seacr/'),
@@ -158,7 +165,8 @@ if (!peaks) {
 			stringent = stringent)
 	}
 
-if (bams) {
+if (bams) { #FASTQ processing to binary alignments is requested
+	#large, small, full, all fragment ranges are defined above and requested as command line input
 
 	if (run_type == 'large') {
 		min_fragment <- lf_low
@@ -181,13 +189,13 @@ if (bams) {
 	}
 
 
-	# Perform read QC
-	SCAR_obj <- fastqc(
+	#apply FASTQC to sample and control FASTQs
+	SCAR_obj <- fastqc( 
 		SCAR_obj,
 		outdir=str_c(sample_dir, '/fastqc_reports/')
 		)
 
-	# Create the bowtie2 genome index from sacCer3
+	#index the reference genome; bowtie2 uses Burrows-Wheeler transform 
 	SCAR_obj <- bowtie2_index(
 		SCAR_obj,
 		outdir=str_c(rel_dir, '/genome/'),
@@ -196,7 +204,7 @@ if (bams) {
 		)
 
 
-	SCAR_obj <- bowtie2_align(
+	SCAR_obj <- bowtie2_align( #align FASTQs using the indexed genome with bowtie2
 		SCAR_obj,
 		outdir=str_c(sample_dir, '/aligned', dir_tag, '/'),
 		alignment_mode=mode,
@@ -206,13 +214,13 @@ if (bams) {
 		)
 }
 
-if (bws) {
-	SCAR_obj <- set_settings(SCAR_obj, compare=FALSE)
-	cov_dir <- str_c(sample_dir, '/coverage', dir_tag, read_tag, '/')
+if (bws) { #coverage calculation requested based on BAMs
+	SCAR_obj <- set_settings(SCAR_obj, compare=FALSE) #make sure outputs are added as coverage and not comparisons
+	cov_dir <- str_c(sample_dir, '/coverage', dir_tag, read_tag, '/') #build coverage directory name
 	
-	center_reads <- cent
+	center_reads <- cent #record decision on whether to use fragment centers or ends for coverage calculation
 
-	# Make tracks
+	# Make tracks using input options, generally leave this alone unless you have a specific option you know needs to be changed here
 	SCAR_obj <- make_tracks_opts(
 	SCAR_obj,
 	outdir=cov_dir,
@@ -230,11 +238,11 @@ if (bws) {
 	)
 	}
 
-if (compare_cov) {
+if (compare_cov) { #comparison of coverage is requested
 
-	SCAR_obj <- set_settings(SCAR_obj, comp_op=comp_op)
+	SCAR_obj <- set_settings(SCAR_obj, comp_op=comp_op) #add to comparison function to SCAR obj
 	comp_op <- pull_setting(SCAR_obj, 'comp_op')
-	comp_dir <- if (comp_out == 'bigwig') {
+	comp_dir <- if (comp_out == 'bigwig') { #make sure appropriate directory name is recorded depending on output file structure requested
 		str_c(sample_dir, '/coverage', dir_tag, read_tag, 
 			'/bw_comp_', comp_op, '/')
 			}
@@ -243,7 +251,7 @@ if (compare_cov) {
 				'/bg_comp_', comp_op, '/')
 				}
 
-	SCAR_obj <- compare_bws(
+	SCAR_obj <- compare_bws( #perform coverage comparison between sample and control bigWigs or bedgraphs
 		SCAR_obj,
 		outdir=comp_dir,
 		comp_op=comp_op,
@@ -254,14 +262,14 @@ if (compare_cov) {
 		)
 	}
 
-if (!is.na(SCAR_obj@sample_sheet[['control_bams']]) && peaks) {
+if (!is.na(SCAR_obj@sample_sheet[['control_bams']]) && peaks) { #peak calling requested; make sure a control sample is present for peak calling
 
-	if (PCF == 'seacr') {
+	if (PCF == 'seacr') { #if SEACR was requested as peak calling function
 
-		genome_dir <- pull_setting(SCAR_obj, 'genome_dir')
+		genome_dir <- pull_setting(SCAR_obj, 'genome_dir') #grab genome directory for chromosome info to make bedgraph files
 
-		# Make bedgraphs
-		SCAR_obj <- make_bgs(
+		#build the required bedgraph inputs for SEACR
+		SCAR_obj <- make_bgs( 
 			SCAR_obj,
 			outdir=str_c(sample_dir, '/bedgraphs', dir_tag, '/'),
 			pair_lr=TRUE,
@@ -269,7 +277,7 @@ if (!is.na(SCAR_obj@sample_sheet[['control_bams']]) && peaks) {
 			chrom_file='genome/sacCer_chr_sorted.txt'
 			)
 
-		# Call peaks
+		# Call peaks with SEACR; also adds SEACR outputs to SCAR object
 		SCAR_obj <- call_peaks_SEACR(
 			SCAR_obj,
 			outdir=str_c(sample_dir, '/peaks', dir_tag, '/'),
@@ -277,7 +285,7 @@ if (!is.na(SCAR_obj@sample_sheet[['control_bams']]) && peaks) {
 			stringent=stringent
 			)
 		
-		SCAR_obj <- add_beds(
+		SCAR_obj <- add_beds( #add dummy MACS outputs to satisfy SCAR object
 			SCAR_obj,
 			peak_dir=str_c(sample_dir, '/peaks', dir_tag, '/macs/'),
 			peak_type = 'macs',
@@ -285,7 +293,7 @@ if (!is.na(SCAR_obj@sample_sheet[['control_bams']]) && peaks) {
 			)
 	}
 
-	if (PCF == 'macs') {
+	if (PCF == 'macs') { #MACS3 peak calling requested - MACS is the standard and preferred method
 
 		SCAR_obj <- call_peaks_macs(
 			SCAR_obj,
@@ -301,7 +309,7 @@ if (!is.na(SCAR_obj@sample_sheet[['control_bams']]) && peaks) {
 			broad = broad_flag
 			)
 
-		SCAR_obj <- add_beds(
+		SCAR_obj <- add_beds( #add dummy SEACR output to satisfy SCAR object
 			SCAR_obj,
 			peak_dir=str_c(sample_dir, '/peaks', dir_tag, '/seacr/'),
 			peak_type = 'seacr',
@@ -309,7 +317,7 @@ if (!is.na(SCAR_obj@sample_sheet[['control_bams']]) && peaks) {
 	}
 }
 
-if (protection) {
+if (protection) { #experimental feature for identifying low coverage in the center of otherwise high signal regions
 
 # Put together inputs for low signal analysis
 # If you want to use an input type, set it to the named variable in the
@@ -349,34 +357,34 @@ SCAR_obj <- pf_analysis(
 	)
 }
 
-if (plot || hmap) {
+if (plot || hmap) { #plotting is requested using deeptools2 plotProfile or plotHeatmap
 
-	plot_dir <- str_c(sample_dir, '/plots', dir_tag, read_tag, '/')
+	plot_dir <- str_c(sample_dir, '/plots', dir_tag, read_tag, '/') #build plot output directory name
 
-	id_str <- '_no_clust'
+	id_str <- '_no_clust' #standard is to add a tag indicating no clustering
 
-	if (!is.na(clust_val)) {
+	if (!is.na(clust_val)) { #add cluster number tag if requested
 		id_str <- str_c('_clust_', clust_val)
 		}
 
-	if (sort_op == 'keep') {
+	if (sort_op == 'keep') { #keep indicates no sorting and is used when making order matched heatmaps
 		id_str <- str_c('_linked')
 		}
 
-	id_str <- str_c(id_str, '_', matrix_b, '_', matrix_a)
+	id_str <- str_c(id_str, '_', matrix_b, '_', matrix_a) #add plotting bounds to output file name
 	
-	if (!is.na(region_file)) {
+	if (!is.na(region_file)) { #add name identifier to output files
 		id_str <- str_c(id_str, '_', job_name)
 		}
 
-	if (is.na(region_file)) {
+	if (is.na(region_file)) { #if no region file was given, add job name as an identifier
 		id_str <- str_c(id_str, '_in_sites')
 		}
 	}
 	
-	out_loc <- str_c(plot_dir, sample_id, dir_tag, '_', comp_op, id_str, read_tag, '/')
+	out_loc <- str_c(plot_dir, sample_id, dir_tag, '_', comp_op, id_str, read_tag, '/') #assemble plotting directory info into an output directory name
 	
-	SCAR_obj <- make_matrix(
+	SCAR_obj <- make_matrix( #map coverage onto input BED regions; will use peaks file if no BED is given and peaks were requested, otherwise will not run
 		SCAR_obj,
 		outdir=out_loc,
 		primary='reference-point',
@@ -390,18 +398,18 @@ if (plot || hmap) {
 		peak_type=PCF
 		)
 
-if (plot) {
+if (plot) { #profile plotting requested
 	
-	out_loc <- str_c(plot_dir, sample_id, dir_tag, '_', comp_op, id_str, read_tag, '/')
+	out_loc <- str_c(plot_dir, sample_id, dir_tag, '_', comp_op, id_str, read_tag, '/') #redundant assignment of outdir for profile
 	
-	points_file <- str_c(out_loc, '/', sample_id, '_profile', dir_tag, '_', comp_op, id_str, read_tag, '.tsv')
+	points_file <- str_c(out_loc, '/', sample_id, '_profile', dir_tag, '_', comp_op, id_str, read_tag, '.tsv') #make the name for a TSV of profile points
 
-	SCAR_obj <- plot_profile(
+	SCAR_obj <- plot_profile( #create an average profile plot based on output of computeMatrix
 		SCAR_obj,
 		outdir=out_loc,
 		matrix=NA,
-		plot_name=str_c(sample_id, '_profile', dir_tag, '_', comp_op, id_str, read_tag, '.png'),
-		plot_opts=str_c(if(!is.na(clust_val)) {str_c('--kmeans', clust_val, sep=' ')},
+		plot_name=str_c(sample_id, '_profile', dir_tag, '_', comp_op, id_str, read_tag, '.png'), #name and format of profile plot
+		plot_opts=str_c(if(!is.na(clust_val)) {str_c('--kmeans', clust_val, sep=' ')}, #options based on deeptools2 docs, can include any desired bash flags
 				'--plotHeight', '10',
 				'--plotWidth', '10',
 				'-T', "'Coverage signal in given regions'",
@@ -412,13 +420,13 @@ if (plot) {
 		)
 	}
 
-if (hmap) {
+if (hmap) { #heatmap is requested, will be output to out_loc
 	SCAR_obj <- plot_heatmap(
 		SCAR_obj,
 		outdir=out_loc,
 		matrix=NA,
 		plot_name=str_c(sample_id, '_hmap', dir_tag, '_', comp_op, id_str, read_tag, '.png'),
-		plot_opts=str_c(if(!is.na(clust_val)) {str_c('--kmeans', clust_val, sep=' ')},
+		plot_opts=str_c(if(!is.na(clust_val)) {str_c('--kmeans', clust_val, sep=' ')}, #options based on deeptools2 docs, can include any desired bash flags
 				'-T', "'Coverage signal in given regions'",
 				'--colorMap', 'Greens',
 				'--boxAroundHeatmaps', 'no',
