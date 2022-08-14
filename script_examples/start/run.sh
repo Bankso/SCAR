@@ -35,33 +35,41 @@ frag_set=$6
 
 cd $home_dir
 
-#mkdir -p genome && cd genome
+mkdir -p genome && cd genome
 
-#wget ftp://ftp.ensembl.org/pub/release-100/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz
+#grab the yeast genome for alignment
+wget ftp://ftp.ensembl.org/pub/release-100/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz
 
-#gunzip Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz
+#unzip genome for indexing
+gunzip Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz
 
-#wget ftp://ftp.ensembl.org/pub/release-100/gff3/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.100.gff3.gz
+#grab yeast genome annotations
+wget ftp://ftp.ensembl.org/pub/release-100/gff3/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.100.gff3.gz
 
-#gunzip Saccharomyces_cerevisiae.R64-1-1.100.gff3.gz
+#unzip annotations
+gunzip Saccharomyces_cerevisiae.R64-1-1.100.gff3.gz
 
-#cd $home_dir
+#go back to central directory containing all directories and files for processing
+cd $home_dir
 
+#call singularity from the cluster
 module load singularity
 
+#if SCAR singularity image file (SIF) isn't present, download the latest version from Sylabs.io
 if [ ! -e ./scar* ]; then
 	
 	singularity cache clean -f
 	singularity pull --arch amd64 library://banksorion/default/scar_software:1.5_latest
 fi
 
-# Start singularity-based processing run 
+# Start singularity-based processing run, feeding inputs for use in processing
+# -eCB forces use of programs in SIF environment, binds files from input home directory, and allows files from the singularity environment to be dumped to the home directory during processing
 singularity exec --env sample_dir=$sample_dir,samples_file=$samples_file,plot_regions=$plot_regions,job_name=$job_name,frag_set=$frag_set -eCB $home_dir:/opt/conda/process -H /opt/conda/process *.sif Rscript $process_script
 
 # Move sbatch logs to sample dir for storage
 mkdir -p $sample_dir/logs/ && mv scripts/logs/run.out $sample_dir/logs/$job_name.out && mv scripts/logs/run.err $sample_dir/logs/$job_name.err
 
-# Clean-up from processing
+# Clean-up temp directory from processing
 rm -r ./temp/
 
 exit
