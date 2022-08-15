@@ -7,6 +7,7 @@ library('stringr')
 
 # Set options for processing; commonly changed options are listed here, but more are available within the functions below
 
+#FASTQ to BAM options
 bams <- FALSE #process FASTQ to BAMs with bowtie2
 sf_low <- 0 #lower size limit for small fragment (SF) alignments
 sf_high <- 120 #upper size limit for SF
@@ -17,29 +18,37 @@ ff_high <- 200 #upper size limit for FF
 af_low <- 0 #lower size limit for all fragment (AF) alignments; useful for aligning longer fragments detected in ChIP-seq
 af_high <- 500 #upper size limit for AF
 mode <- 'end-to-end' #'end-to-end' or 'local' alignment modes for bowtie2
-mapq_val <- 30 #set the value for samtools to filter reads by alignment quality (MAPQ) score
-comp_op <- 'ratio' #the mathematical operation to use with bamCompare; can be 'ratio', 'log2', 'add', 'subtract'. See deeptools2 documentation for more info
+mapq_val <- 30 #set the value for samtools to filter BAMs by alignment quality (MAPQ) score
+
+#BAM to genome coverage 
 bws <- FALSE #process BAM files to bigwigs
 cent <- TRUE #TRUE means use fragment centers to calculate coverage; FALSE means use fragment ends
-compare_cov <- FALSE #make coverage comparison calculations with bamCompare using the comp_op function defined above
+norm_type <- 'RPGC' #the type of normalization to be used when calculating coverage with bamCompare. 1x normalization to genome coverage (RPGC) is recommended to deal with differences in sequencing depth
+cov_out <- 'bigwig' #output format for bamCoverage - 'bigwig' or 'bedgraph'
+
+#Genome coverage comparison calculations
+compare_cov <- FALSE #make coverage comparison calculations with bamCompare using the comp_op function
+comp_op <- 'ratio' #the mathematical operation to use with bamCompare; can be 'ratio', 'log2', 'add', 'subtract'. See deeptools2 documentation for more info
+comp_out <- 'bigwig' #output format for bamCompare - 'bigwig' or 'bedgraph'. Should be the same as cov_out
+
+#Call peaks from BAMs
 peaks <- FALSE #perform peak calling on BAM files
 PCF <- 'macs' #peak calling function to use; MACS is the current standard. See GitHub macs3-project/MACS for more info. SEACR is also available 
 broad_flag <- FALSE #use the built-in expanded broad peak calling limit for MACS3
 stringent <- TRUE #stringent peak calling cutoff designation for SEACR
 protection <- FALSE #[experimental] calculate central low levels of protection
+
+#Plot profiles and heatmaps based on coverage
 plot <- TRUE #use deeptools2 plotProfile to plot average signal based on input BED regions
 hmap <- TRUE #use deeptools2 plotHeatmap to plot signal input BED regions
 map_type <- "'heatmap and colorbar'" #type of information to be given on heatmap
 #plot_comp <- TRUE #[deprecated] plot comparison traces or individual coverage. Superceded by s_n_c
+s_n_c <- 'c' #type of bigwig file to use for computeMatrix. 'c' uses the built in coverage comparisons. Alternatively, a path to a bigWig file can be given
 region_file <- TRUE #use a BED file given at command line
 sort_op <- 'descend' #how to sort the data when presenting it in the heatmap
 sort_type <- 'max' #type of sorting calculation to use
 matrix_b <- 500 #lower limit for computeMatrix, used to map coverage onto input BED regions
 matrix_a <- 500 #upper limit for computeMatrix
-s_n_c <- 'c' #type of bigwig file to use for computeMatrix. 'c' uses the built in coverage comparisons. Alternatively, a path to a bigwig file can be given
-cov_out <- 'bigwig' #output format for bamCoverage - 'bigwig' or 'bedgraph'
-comp_out <- 'bigwig' #output format for bamCompare - 'bigwig' or 'bedgraph'. Should be the same as cov_out
-norm_type <- 'RPGC' #the type of normalization to be used when calculating coverage with bamCompare. 1x normalization to genome coverage (RPGC) is recommended to deal with differences in sequencing depth
 clust_val <- NA #number of clusters to be fed to deeptools2 implementation of k-means. Produces clustered heatmaps and profiles
 temp_dir <- 'temp/' #a temporary directory for large files to be stored during processing by deeptools2
 
